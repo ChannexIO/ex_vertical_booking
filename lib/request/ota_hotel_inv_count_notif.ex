@@ -31,7 +31,7 @@ defmodule ExVerticalBooking.Request.OtaHotelInvCountNotif do
     params
     |> build_hotel_inv_count_notif()
     |> Document.build(@action, credentials)
-    |> Request.send(meta)
+    |> Request.send(meta, credentials)
   end
 
   @spec build_hotel_inv_count_notif(t) :: {atom(), map | nil, list | nil}

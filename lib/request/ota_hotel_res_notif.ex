@@ -37,7 +37,7 @@ defmodule ExVerticalBooking.Request.OtaHotelResNotif do
     params
     |> build_hotel_res_notif()
     |> Document.build(@action, credentials)
-    |> Request.send(meta)
+    |> Request.send(meta, credentials)
   end
 
   @spec build_hotel_res_notif(t) :: {atom(), map | nil, list | nil}

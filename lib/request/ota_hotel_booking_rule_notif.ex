@@ -44,7 +44,7 @@ defmodule ExVerticalBooking.Request.OtaHotelBookingRuleNotif do
     params
     |> build_hotel_booking_rule_notif()
     |> Document.build(@action, credentials, [{"Target", "Production"}])
-    |> Request.send(meta)
+    |> Request.send(meta, credentials)
   end
 
   @spec build_hotel_booking_rule_notif(t) :: {atom(), map | nil, list | nil}

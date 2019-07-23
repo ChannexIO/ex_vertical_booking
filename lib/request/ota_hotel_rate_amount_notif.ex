@@ -41,7 +41,7 @@ defmodule ExVerticalBooking.Request.OtaHotelRateAmountNotif do
     params
     |> build_hotel_rate_amount_notif()
     |> Document.build(@action, credentials)
-    |> Request.send(meta)
+    |> Request.send(meta, credentials)
   end
 
   @spec build_hotel_rate_amount_notif(t) :: {atom(), map | nil, list | nil}

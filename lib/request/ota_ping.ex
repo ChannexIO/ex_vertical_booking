@@ -21,6 +21,6 @@ defmodule ExVerticalBooking.Request.OtaPing do
   def execute(credentials, meta) do
     {:"ns1:EchoData", nil, ["Echo text"]}
     |> Document.build(@action, credentials)
-    |> Request.send(meta)
+    |> Request.send(meta, credentials)
   end
 end

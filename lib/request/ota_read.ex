@@ -14,7 +14,7 @@ defmodule ExVerticalBooking.Request.OtaRead do
     params
     |> build_read()
     |> Document.build(@action, credentials)
-    |> Request.send(meta)
+    |> Request.send(meta, credentials)
   end
 
   @spec build_read(%{hotel_code: String.t()}) :: {atom(), map | nil, list | nil}

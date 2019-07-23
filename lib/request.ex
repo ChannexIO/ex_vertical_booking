@@ -1,10 +1,8 @@
 defmodule ExVerticalBooking.Request do
   alias ExVerticalBooking.Response.Parser
 
-  @endpoint Application.get_env(:ex_vertical_booking, :endpoint)
-
-  def send(document, meta) do
-    {_, payload} = response = HTTPoison.post(@endpoint, document, [], [])
+  def send(document, meta, %{endpoint: endpoint}) do
+    {_, payload} = response = HTTPoison.post(endpoint, document, [], [])
     parsed_response = Parser.handle_response(response)
 
     meta =
@@ -18,5 +16,8 @@ defmodule ExVerticalBooking.Request do
       {:error, reason} ->
         {:error, response, meta |> Map.put(:success, false) |> Map.put(:errors, reason)}
     end
+  end
+  def send(document, meta, _) do
+    {:error, document, meta |> Map.put(:success, false) |> Map.put(:errors, :invalid_endpoint)}
   end
 end
