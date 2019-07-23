@@ -20,6 +20,7 @@ defmodule ExVerticalBooking.Error do
   def reason_for("402"), do: :invalid_room_type
   def reason_for("404"), do: :invalid_date_range
   def reason_for("497"), do: :invalid_authorisation
+  def reason_for({:function_clause, reason}), do: {:function_clause, reason}
   def reason_for(_), do: :undefined_error
   def reason_for("SOAP-ENV:" <> _, _reason), do: :invalid_api_request
   def reason_for(_, _), do: :undefined_error
@@ -57,4 +58,6 @@ defmodule ExVerticalBooking.Error do
 
   def humanize_error(reason) when is_binary(reason),
     do: reason
+
+  def humanise_error({:function_clause, reason}), do: "BadRPC with function clause #{reason}}"
 end
