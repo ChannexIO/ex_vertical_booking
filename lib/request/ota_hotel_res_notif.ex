@@ -35,13 +35,13 @@ defmodule ExVerticalBooking.Request.OtaHotelResNotif do
   @spec execute(t, credentials, Meta.t()) :: {:ok, struct(), Meta.t()} | {:error, any(), Meta.t()}
   def execute(%{hotel_reservations: _} = params, credentials, meta) do
     params
-    |> build_hotel_res_notif()
+    |> build_hotel_res_notif(meta)
     |> Document.build(@action, credentials)
     |> Request.send(meta, credentials)
   end
 
-  @spec build_hotel_res_notif(t) :: {atom(), map | nil, list | nil}
-  def build_hotel_res_notif(%{hotel_reservations: hotel_reservations}) do
+  @spec build_hotel_res_notif(t, Meta.t()) :: {{atom(), map | nil, list | nil}, Meta.t()}
+  def build_hotel_res_notif(%{hotel_reservations: hotel_reservations}, meta) do
     hotel_reservations_elements =
       hotel_reservations
       |> Enum.map(fn %{
@@ -55,7 +55,7 @@ defmodule ExVerticalBooking.Request.OtaHotelResNotif do
          ]}
       end)
 
-    {:"ns1:HotelReservations", nil, hotel_reservations_elements}
+    {{:"ns1:HotelReservations", nil, hotel_reservations_elements}, meta}
   end
 
   def build_unique_id(%{type: type, id_context: id_context, id: id}) do

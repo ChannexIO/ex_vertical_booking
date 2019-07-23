@@ -12,13 +12,13 @@ defmodule ExVerticalBooking.Request.OtaRead do
   @spec execute(%{hotel_code: String.t()}, credentials, Meta.t()) :: {:ok, struct(), Meta.t()} | {:error, any(), Meta.t()}
   def execute(%{hotel_code: _} = params, credentials, meta) do
     params
-    |> build_read()
+    |> build_read(meta)
     |> Document.build(@action, credentials)
-    |> Request.send(meta, credentials)
+    |> Request.send(credentials)
   end
 
-  @spec build_read(%{hotel_code: String.t()}) :: {atom(), map | nil, list | nil}
-  def build_read(%{hotel_code: hotel_code}) do
-    {:"ns1:ReadRequests", nil, [{:"ns1:HotelReadRequest", %{HotelCode: "#{hotel_code}"}, nil}]}
+  @spec build_read(%{hotel_code: String.t()}, Meta.t()) :: {{atom(), map | nil, list | nil}, Meta.t()}
+  def build_read(%{hotel_code: hotel_code}, meta) do
+  {{:"ns1:ReadRequests", nil, [{:"ns1:HotelReadRequest", %{HotelCode: "#{hotel_code}"}, nil}]}, meta}
   end
 end

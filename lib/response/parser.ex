@@ -31,22 +31,11 @@ defmodule ExVerticalBooking.Response.Parser do
             Map.put(acc, key, value)
           end
         end)
-        |> FaultProcessor.convert()
-
-      {:error, e,
-       meta |> Map.put(:success, false) |> Map.put(:errors, [Error.message(e) | meta.errors])}
+        |> FaultProcessor.create_response(meta)
     rescue
-      e in ArgumentError ->
-        e = FaultProcessor.convert(e)
-
-        {:error, e,
-         meta |> Map.put(:success, false) |> Map.put(:errors, [Error.message(e) | meta.errors])}
+      e in ArgumentError -> FaultProcessor.create_response(e, meta)
     catch
-      :exit, e ->
-        e = FaultProcessor.convert(e)
-
-        {:error, e,
-         meta |> Map.put(:success, false) |> Map.put(:errors, [Error.message(e) | meta.errors])}
+      :exit, e -> FaultProcessor.create_response(e, meta)
     end
   end
 
@@ -56,17 +45,8 @@ defmodule ExVerticalBooking.Response.Parser do
 
       {:ok, xml_response |> xpath(~x"//#{body_tag}/*"l) |> parse_elements() |> List.first(), meta}
     rescue
-      e in ArgumentError ->
-        e = FaultProcessor.convert(e)
-
-        {:error, e,
-         meta |> Map.put(:success, false) |> Map.put(:errors, [Error.message(e) | meta.errors])}
-    catch
-      :exit, e ->
-        e = FaultProcessor.convert(e)
-
-        {:error, e,
-         meta |> Map.put(:success, false) |> Map.put(:errors, [Error.message(e) | meta.errors])}
+      e in ArgumentError -> FaultProcessor.create_response(e, meta)
+      :exit, e -> FaultProcessor.create_response(e, meta)
     end
   end
 

@@ -29,13 +29,13 @@ defmodule ExVerticalBooking.Request.OtaHotelInvCountNotif do
   @spec execute(t, credentials, Meta.t()) :: {:ok, struct(), Meta.t()} | {:error, any(), Meta.t()}
   def execute(%{hotel_code: _, inventories: _} = params, credentials, meta) do
     params
-    |> build_hotel_inv_count_notif()
+    |> build_hotel_inv_count_notif(meta)
     |> Document.build(@action, credentials)
-    |> Request.send(meta, credentials)
+    |> Request.send(credentials)
   end
 
-  @spec build_hotel_inv_count_notif(t) :: {atom(), map | nil, list | nil}
-  def build_hotel_inv_count_notif(%{hotel_code: hotel_code, inventories: inventories}) do
+  @spec build_hotel_inv_count_notif(t, Meta.t()) :: {{atom(), map | nil, list | nil}, Meta.t()}
+  def build_hotel_inv_count_notif(%{hotel_code: hotel_code, inventories: inventories}, meta) do
     inventories_elements =
       inventories
       |> Enum.map(fn %{
@@ -49,6 +49,6 @@ defmodule ExVerticalBooking.Request.OtaHotelInvCountNotif do
          ]}
       end)
 
-    {:"ns1:Inventories", %{HotelCode: "#{hotel_code}"}, inventories_elements}
+    {{:"ns1:Inventories", %{HotelCode: "#{hotel_code}"}, inventories_elements}, meta}
   end
 end

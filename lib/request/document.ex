@@ -2,6 +2,7 @@ defmodule ExVerticalBooking.Request.Document do
   @moduledoc """
   Headers generator by soap action and custom headers.
   """
+  alias ExVerticalBooking.Response.FaultProcessor
 
   @definitions %{
     "xmlns:SOAP-ENV" => "http://schemas.xmlsoap.org/soap/envelope/",
@@ -11,22 +12,43 @@ defmodule ExVerticalBooking.Request.Document do
     "xmlns:ns3" => "http://schemas.xmlsoap.org/ws/2004/08/addressing"
   }
 
-  def build(payload_element, action, credentials, addition \\ []) do
-    operation =
-      Enum.reduce(
-        addition,
-        %{TimeStamp: DateTime.utc_now() |> DateTime.to_iso8601(), Version: "1"},
-        fn {name, value}, acc -> Map.put(acc, name, value) end
-      )
+  def build(payload, action, credentials, addition \\ [])
+  def build({:error, meta}, action, credentials, addition), do: {:error, meta}
 
-    operation_element = {:"ns1:#{action}RQ", operation, [payload_element]}
+  def build({payload_element, meta}, action, credentials, addition) do
+    try do
+      {{action, credentials, build_body(addition, action, payload_element)} |> generate(), meta}
+    rescue
+      e in ArgumentError -> FaultProcessor.create_response(e, meta)
+      e in FunctionClauseError -> FaultProcessor.create_response(e, meta)
+    end
+  end
 
-    body = {:"SOAP-ENV:Body", nil, [operation_element]}
+  def build_operation(addition) do
+    Enum.reduce(
+      addition,
+      %{TimeStamp: DateTime.utc_now() |> DateTime.to_iso8601(), Version: "1"},
+      fn {name, value}, acc -> Map.put(acc, name, value) end
+    )
+  end
 
+  def build_operation_element(addition, action, payload_element) do
+    {:"ns1:#{action}RQ", build_operation(addition), [payload_element]}
+  end
+
+  def build_body(addition, action, payload_element) do
+    {:"SOAP-ENV:Body", nil, [build_operation_element(addition, action, payload_element)]}
+  end
+
+  def generate({action, credentials, body}) do
     XmlBuilder.generate(:xml_decl, encoding: "UTF-8") <>
       "\n" <>
-      XmlBuilder.generate({:"SOAP-ENV:Envelope", @definitions, [header(action, credentials), body]})
+      XmlBuilder.generate(
+        {:"SOAP-ENV:Envelope", @definitions, [header(action, credentials), body]}
+      )
   end
+
+  #  def check_generation()
 
   def header(action, credentials) do
     auth_element =

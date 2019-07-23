@@ -42,16 +42,16 @@ defmodule ExVerticalBooking.Request.OtaHotelBookingRuleNotif do
   @spec execute(t, credentials, Meta.t()) :: {:ok, struct(), Meta.t()} | {:error, any(), Meta.t()}
   def execute(%{hotel_code: _, rule_messages: _} = params, credentials, meta) do
     params
-    |> build_hotel_booking_rule_notif()
+    |> build_hotel_booking_rule_notif(meta)
     |> Document.build(@action, credentials, [{"Target", "Production"}])
-    |> Request.send(meta, credentials)
+    |> Request.send(credentials)
   end
 
-  @spec build_hotel_booking_rule_notif(t) :: {atom(), map | nil, list | nil}
+  @spec build_hotel_booking_rule_notif(t, Meta.t()) :: {{atom(), map | nil, list | nil}, Meta.t()}
   def build_hotel_booking_rule_notif(%{
         hotel_code: hotel_code,
         rule_messages: rule_messages
-      }) do
+      }, meta) do
     rule_messages_elements =
       rule_messages
       |> Enum.map(fn %{
@@ -71,7 +71,7 @@ defmodule ExVerticalBooking.Request.OtaHotelBookingRuleNotif do
          ]}
       end)
 
-    {:"ns1:RuleMessages", %{HotelCode: "#{hotel_code}"}, rule_messages_elements}
+    {{:"ns1:RuleMessages", %{HotelCode: "#{hotel_code}"}, rule_messages_elements}, meta}
   end
 
   def build_booking_rules(booking_rules) do

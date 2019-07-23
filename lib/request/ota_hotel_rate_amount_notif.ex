@@ -39,16 +39,16 @@ defmodule ExVerticalBooking.Request.OtaHotelRateAmountNotif do
   @spec execute(t, credentials, Meta.t()) :: {:ok, struct(), Meta.t()} | {:error, any(), Meta.t()}
   def execute(%{hotel_code: _, rate_amount_messages: _} = params, credentials, meta) do
     params
-    |> build_hotel_rate_amount_notif()
+    |> build_hotel_rate_amount_notif(meta)
     |> Document.build(@action, credentials)
-    |> Request.send(meta, credentials)
+    |> Request.send(credentials)
   end
 
-  @spec build_hotel_rate_amount_notif(t) :: {atom(), map | nil, list | nil}
+  @spec build_hotel_rate_amount_notif(t, Meta.t()) :: {{atom(), map | nil, list | nil}, Meta.t()}
   def build_hotel_rate_amount_notif(%{
         hotel_code: hotel_code,
         rate_amount_messages: rate_amount_messages
-      }) do
+      }, meta) do
     rate_amount_messages_elements =
       rate_amount_messages
       |> Enum.map(fn %{
@@ -64,7 +64,8 @@ defmodule ExVerticalBooking.Request.OtaHotelRateAmountNotif do
          ]}
       end)
 
-    {:"ns1:RateAmountMessages", %{HotelCode: "#{hotel_code}"}, rate_amount_messages_elements}
+    {{:"ns1:RateAmountMessages", %{HotelCode: "#{hotel_code}"}, rate_amount_messages_elements},
+     meta}
   end
 
   def build_rates(rates) do
