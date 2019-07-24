@@ -15,6 +15,7 @@ defmodule ExVerticalBooking.Error do
 
   def reason_for(:xml_parsing_error), do: :xml_parsing_error
   def reason_for(:invalid_endpoint), do: :invalid_endpoint
+  def reason_for(:empty_payload), do: :empty_payload
   def reason_for("15"), do: :date_in_the_past_or_not_alowed
   def reason_for("321"), do: :required_field_missing
   def reason_for("402"), do: :invalid_room_type
@@ -34,6 +35,9 @@ defmodule ExVerticalBooking.Error do
 
   def humanize_error(:invalid_endpoint),
     do: "Invalid endpoint"
+
+  def humanize_error(:empty_payload),
+      do: "Empty payload"
 
   def humanize_error(:date_in_the_past_or_not_alowed),
     do: "Invalid date: updates in the past are not allowed"

@@ -42,7 +42,7 @@ defmodule ExVerticalBooking.Request.OtaHotelResNotif do
 
   @spec build_hotel_res_notif(t, Meta.t()) :: {{atom(), map | nil, list | nil}, Meta.t()}
   def build_hotel_res_notif(%{hotel_reservations: []} = payload, meta) do
-    {:error, payload, meta |> Map.put(:success, false) |> Map.put(:errors, ["Empty payload"])}
+    {:error, payload, meta |> Map.put(:success, false) |> Map.put(:errors, [:empty_payload])}
   end
 
   def build_hotel_res_notif(%{hotel_reservations: hotel_reservations}, meta) do

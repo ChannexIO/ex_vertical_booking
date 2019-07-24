@@ -81,7 +81,7 @@ defmodule ExVerticalBooking.Request.OtaHotelRateAmountNotifTest do
   end
 
   test "build_hotel_rate_amount_notif_fail" do
-    assert {:error, _, %{success: false, errors: ["Empty payload"]}} =
+    assert {:error, _, %{success: false, errors: [:empty_payload]}} =
              OtaHotelRateAmountNotif.build_hotel_rate_amount_notif(
                %{
                  hotel_code: @hotel_code,

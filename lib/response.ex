@@ -67,7 +67,7 @@ end
       [
         {:error, %{hotel_code: "18296", inventories: []},
          %{
-           errors: ["Empty payload"],
+           errors: [:empty_payload],
            finished_at: nil,
            method: nil,
            request: nil,

@@ -46,7 +46,7 @@ defmodule ExVerticalBooking.Request.OtaHotelRateAmountNotif do
 
   @spec build_hotel_rate_amount_notif(t, Meta.t()) :: {{atom(), map | nil, list | nil}, Meta.t()}
   def build_hotel_rate_amount_notif(%{hotel_code: _, rate_amount_messages: []} = payload, meta) do
-    {:error, payload, meta |> Map.put(:success, false) |> Map.put(:errors, ["Empty payload"])}
+    {:error, payload, meta |> Map.put(:success, false) |> Map.put(:errors, [:empty_payload])}
   end
 
   def build_hotel_rate_amount_notif(

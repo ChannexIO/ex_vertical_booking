@@ -69,7 +69,7 @@ defmodule ExVerticalBooking.Request.OtaHotelResNotifTest do
   end
 
   test "build_hotel_res_notif_fail" do
-    assert {:error, _, %{success: false, errors: ["Empty payload"]}} =
+    assert {:error, _, %{success: false, errors: [:empty_payload]}} =
              OtaHotelResNotif.build_hotel_res_notif(%{hotel_reservations: []}, @meta)
   end
 

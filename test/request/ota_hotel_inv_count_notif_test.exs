@@ -49,7 +49,7 @@ defmodule ExVerticalBooking.Request.OtaHotelInvCountNotifTest do
   end
 
   test "build_hotel_inv_count_notif_fail" do
-    assert {:error, _, %{success: false, errors: ["Empty payload"]}} =
+    assert {:error, _, %{success: false, errors: [:empty_payload]}} =
              OtaHotelInvCountNotif.build_hotel_inv_count_notif(
                %{hotel_code: @hotel_code, inventories: []},
                @meta
