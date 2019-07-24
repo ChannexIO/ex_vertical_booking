@@ -11,7 +11,7 @@ defmodule ExVerticalBooking.Response do
           request_url: String.t(),
           status_code: pos_integer()
         }
-
+  alias ExVerticalBooking.Response.FaultProcessor
   alias ExVerticalBooking.Response.Parser
 
   @doc """
@@ -32,6 +32,7 @@ defmodule ExVerticalBooking.Response do
   def parse(body, _status_code, meta), do: body |> Parser.parse(:successful, meta) |> cleanup_keys
 
   def parse_response({:ok, response, meta}), do: parse(response.body, response.status_code, meta)
+  def parse_response({:error, _, meta} = e), do: FaultProcessor.create_response(e, meta)
 
   def cleanup_keys(map) when is_map(map) do
     map
