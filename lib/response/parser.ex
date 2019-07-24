@@ -46,7 +46,6 @@ defmodule ExVerticalBooking.Response.Parser do
       {:ok, xml_response |> xpath(~x"//#{body_tag}/*"l) |> parse_elements() |> List.first(), meta}
     rescue
       e in ArgumentError -> FaultProcessor.create_response(e, meta)
-      :exit, e -> FaultProcessor.create_response(e, meta)
     end
   end
 
