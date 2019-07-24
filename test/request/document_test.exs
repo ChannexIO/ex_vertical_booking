@@ -15,7 +15,15 @@ defmodule ExVerticalBooking.Request.DocumentTest do
     endpoint: @endpoint,
     hotel_code: @hotel_code
   }
-
+  @meta %{
+    request: nil,
+    response: nil,
+    method: nil,
+    started_at: DateTime.utc_now(),
+    finished_at: nil,
+    success: true,
+    errors: []
+  }
   test "header/2" do
     headers = Document.header("TEST_action", @credentials)
 
@@ -41,9 +49,9 @@ defmodule ExVerticalBooking.Request.DocumentTest do
   end
 
   test "build/3" do
-    document =
+    {document, _meta} =
       Document.build(
-        {:tag, %{element_1: 1, element_2: "two"}, ["Value_1", "Value_2"]},
+        {{:tag, %{element_1: 1, element_2: "two"}, ["Value_1", "Value_2"]}, @meta},
         "TEST_Action",
         @credentials
       )

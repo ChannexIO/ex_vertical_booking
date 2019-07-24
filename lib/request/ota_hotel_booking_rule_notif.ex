@@ -48,10 +48,17 @@ defmodule ExVerticalBooking.Request.OtaHotelBookingRuleNotif do
   end
 
   @spec build_hotel_booking_rule_notif(t, Meta.t()) :: {{atom(), map | nil, list | nil}, Meta.t()}
-  def build_hotel_booking_rule_notif(%{
-        hotel_code: hotel_code,
-        rule_messages: rule_messages
-      }, meta) do
+  def build_hotel_booking_rule_notif(%{hotel_code: _, rule_messages: []} = payload, meta) do
+    {:error, payload, meta |> Map.put(:success, false) |> Map.put(:errors, ["Empty payload"])}
+  end
+
+  def build_hotel_booking_rule_notif(
+        %{
+          hotel_code: hotel_code,
+          rule_messages: rule_messages
+        },
+        meta
+      ) do
     rule_messages_elements =
       rule_messages
       |> Enum.map(fn %{

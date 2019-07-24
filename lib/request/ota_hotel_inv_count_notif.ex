@@ -35,6 +35,10 @@ defmodule ExVerticalBooking.Request.OtaHotelInvCountNotif do
   end
 
   @spec build_hotel_inv_count_notif(t, Meta.t()) :: {{atom(), map | nil, list | nil}, Meta.t()}
+  def build_hotel_inv_count_notif(%{hotel_code: _, inventories: []} = payload, meta) do
+    {:error, payload, meta |> Map.put(:success, false) |> Map.put(:errors, ["Empty payload"])}
+  end
+
   def build_hotel_inv_count_notif(%{hotel_code: hotel_code, inventories: inventories}, meta) do
     inventories_elements =
       inventories

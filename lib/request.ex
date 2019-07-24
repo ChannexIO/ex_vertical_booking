@@ -14,7 +14,7 @@ defmodule ExVerticalBooking.Request do
       {:ok, parsed_response, meta |> Map.put(:response, payload.body)}
     else
       {:error, reason} ->
-        {:error, response, meta |> Map.put(:success, false) |> Map.put(:errors, reason)}
+        {:error, response, meta |> Map.put(:success, false) |> Map.put(:errors, [reason])}
     end
   end
 
@@ -22,6 +22,6 @@ defmodule ExVerticalBooking.Request do
     {:error, document, meta |> Map.put(:success, false) |> Map.put(:errors, meta.errors)}
   end
   def send({document, meta}, _) do
-    {:error, document, meta |> Map.put(:success, false) |> Map.put(:errors, :invalid_endpoint)}
+    {:error, document, meta |> Map.put(:success, false) |> Map.put(:errors, [:invalid_endpoint])}
   end
 end

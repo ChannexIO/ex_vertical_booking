@@ -5,29 +5,41 @@ defmodule ExVerticalBooking.Request.OtaHotelResNotifTest do
 
   alias ExVerticalBooking.Request.OtaHotelResNotif
 
+  @meta %{
+    request: nil,
+    response: nil,
+    method: nil,
+    started_at: DateTime.utc_now(),
+    finished_at: nil,
+    success: true,
+    errors: []
+  }
   test "build_hotel_res_notif" do
-    element =
-      OtaHotelResNotif.build_hotel_res_notif(%{
-        hotel_reservations: [
-          %{
-            unique_id: %{
-              type: "14",
-              id_context: "CrsConfirmNumber",
-              id: "287329696/87030894|8953"
-            },
-            res_global_info: %{
-              hotel_reservation_ids: [
-                %{
-                  res_id_type: "10",
-                  res_id_value: "123456ABCD",
-                  res_id_source: "PMS",
-                  res_id_source_context: "PmsConfirmNumber"
-                }
-              ]
+    {element, _meta} =
+      OtaHotelResNotif.build_hotel_res_notif(
+        %{
+          hotel_reservations: [
+            %{
+              unique_id: %{
+                type: "14",
+                id_context: "CrsConfirmNumber",
+                id: "287329696/87030894|8953"
+              },
+              res_global_info: %{
+                hotel_reservation_ids: [
+                  %{
+                    res_id_type: "10",
+                    res_id_value: "123456ABCD",
+                    res_id_source: "PMS",
+                    res_id_source_context: "PmsConfirmNumber"
+                  }
+                ]
+              }
             }
-          }
-        ]
-      })
+          ]
+        },
+        @meta
+      )
 
     element |> XmlBuilder.generate()
 
@@ -54,6 +66,11 @@ defmodule ExVerticalBooking.Request.OtaHotelResNotifTest do
                     ]}
                  ]}
               ]}
+  end
+
+  test "build_hotel_res_notif_fail" do
+    assert {:error, _, %{success: false, errors: ["Empty payload"]}} =
+             OtaHotelResNotif.build_hotel_res_notif(%{hotel_reservations: []}, @meta)
   end
 
   test "build_unique_id/1" do

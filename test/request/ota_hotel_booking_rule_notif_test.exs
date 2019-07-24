@@ -7,42 +7,55 @@ defmodule ExVerticalBooking.Request.OtaHotelBookingRuleNotifTest do
 
   @hotel_code "2e097d85-9eec-433a-9f0a-dd4f1622501f"
 
-  test "build_hotel_booking_rule_notif/1" do
-    element =
-      OtaHotelBookingRuleNotif.build_hotel_booking_rule_notif(%{
-        hotel_code: @hotel_code,
-        rule_messages: [
-          %{
-            status_application_control: %{
-              start: "2010-06-19",
-              end: "2010-06-20",
-              inv_type_code: "DBL",
-              rate_plan_code: "BAR",
-              destination_system_codes: [1, 2, 3]
-            },
-            booking_rules: [
-              %{
-                lengths_of_stay: [
-                  %{time: "2", time_unit: "Day", min_max_message_type: "SetMinLOS"}
-                ],
-                restriction_status: nil
+  @meta %{
+    request: nil,
+    response: nil,
+    method: nil,
+    started_at: DateTime.utc_now(),
+    finished_at: nil,
+    success: true,
+    errors: []
+  }
+
+  test "build_hotel_booking_rule_notif/2" do
+    {element, _meta} =
+      OtaHotelBookingRuleNotif.build_hotel_booking_rule_notif(
+        %{
+          hotel_code: @hotel_code,
+          rule_messages: [
+            %{
+              status_application_control: %{
+                start: "2010-06-19",
+                end: "2010-06-20",
+                inv_type_code: "DBL",
+                rate_plan_code: "BAR",
+                destination_system_codes: [1, 2, 3]
               },
-              %{
-                lengths_of_stay: nil,
-                restriction_status: %{restriction: "Master", status: "Close"}
-              },
-              %{
-                lengths_of_stay: nil,
-                restriction_status: %{restriction: "Arrival", status: "Open"}
-              },
-              %{
-                lengths_of_stay: nil,
-                restriction_status: %{restriction: "Departure", status: "Close"}
-              }
-            ]
-          }
-        ]
-      })
+              booking_rules: [
+                %{
+                  lengths_of_stay: [
+                    %{time: "2", time_unit: "Day", min_max_message_type: "SetMinLOS"}
+                  ],
+                  restriction_status: nil
+                },
+                %{
+                  lengths_of_stay: nil,
+                  restriction_status: %{restriction: "Master", status: "Close"}
+                },
+                %{
+                  lengths_of_stay: nil,
+                  restriction_status: %{restriction: "Arrival", status: "Open"}
+                },
+                %{
+                  lengths_of_stay: nil,
+                  restriction_status: %{restriction: "Departure", status: "Close"}
+                }
+              ]
+            }
+          ]
+        },
+        @meta
+      )
 
     element |> XmlBuilder.generate()
 
@@ -96,6 +109,14 @@ defmodule ExVerticalBooking.Request.OtaHotelBookingRuleNotifTest do
               ]}
   end
 
+  test "build_hotel_booking_rule_notif_fail" do
+    assert {:error, _, %{success: false, errors: ["Empty payload"]}} =
+             OtaHotelBookingRuleNotif.build_hotel_booking_rule_notif(
+               %{hotel_code: @hotel_code, rule_messages: []},
+               @meta
+             )
+  end
+
   test "build_booking_rules/1" do
     element =
       OtaHotelBookingRuleNotif.build_booking_rules([
@@ -136,11 +157,13 @@ defmodule ExVerticalBooking.Request.OtaHotelBookingRuleNotifTest do
 
   test "build_lengths_of_stay/1" do
     element =
-      OtaHotelBookingRuleNotif.build_lengths_of_stay([%{
-        time: "2",
-        time_unit: "Day",
-        min_max_message_type: "SetMinLOS"
-      }])
+      OtaHotelBookingRuleNotif.build_lengths_of_stay([
+        %{
+          time: "2",
+          time_unit: "Day",
+          min_max_message_type: "SetMinLOS"
+        }
+      ])
 
     element |> XmlBuilder.generate()
   end

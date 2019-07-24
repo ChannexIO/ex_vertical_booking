@@ -6,9 +6,17 @@ defmodule ExVerticalBooking.Request.OtaReadTest do
   alias ExVerticalBooking.Request.OtaRead
 
   @hotel_code "2e097d85-9eec-433a-9f0a-dd4f1622501f"
-
+  @meta %{
+    request: nil,
+    response: nil,
+    method: nil,
+    started_at: DateTime.utc_now(),
+    finished_at: nil,
+    success: true,
+    errors: []
+  }
   test "build_hotel_rate_amount_notif" do
-    element = OtaRead.build_read(%{hotel_code: @hotel_code})
+    {element, _meta} = OtaRead.build_read(%{hotel_code: @hotel_code}, @meta)
 
     element |> XmlBuilder.generate()
 
