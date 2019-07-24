@@ -21,6 +21,11 @@ defmodule ExVerticalBooking.Request do
   def send({document, %{success: false} = meta}, _) do
     {:error, document, meta |> Map.put(:success, false) |> Map.put(:errors, meta.errors)}
   end
+
+  def send({:error, document, meta}, _) do
+    {:error, document, meta |> Map.put(:success, false) |> Map.put(:errors, meta.errors)}
+  end
+
   def send({document, meta}, _) do
     {:error, document, meta |> Map.put(:success, false) |> Map.put(:errors, [:invalid_endpoint])}
   end
