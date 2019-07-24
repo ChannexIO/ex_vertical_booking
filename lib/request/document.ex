@@ -13,7 +13,7 @@ defmodule ExVerticalBooking.Request.Document do
   }
 
   def build(payload, action, credentials, addition \\ [])
-  def build({:error, meta}, action, credentials, addition), do: {:error, meta}
+  def build({:error, payload, meta}, action, credentials, addition), do: {:error, payload, meta}
 
   def build({payload_element, meta}, action, credentials, addition) do
     try do
