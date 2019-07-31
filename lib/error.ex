@@ -22,6 +22,7 @@ defmodule ExVerticalBooking.Error do
   def reason_for("404"), do: :invalid_date_range
   def reason_for("497"), do: :invalid_authorisation
   def reason_for({:function_clause, reason}), do: {:function_clause, reason}
+  def reason_for({:argument_error, reason}), do: {:argument_error, reason}
   def reason_for(_), do: :undefined_error
   def reason_for("SOAP-ENV:" <> _, _reason), do: :invalid_api_request
   def reason_for(_, _), do: :undefined_error
