@@ -34,6 +34,7 @@ defmodule ExVerticalBooking.Response.Parser do
         |> FaultProcessor.create_response(meta)
     rescue
       e in ArgumentError -> FaultProcessor.create_response(e, meta)
+      e in FunctionClauseError -> FaultProcessor.create_response(e, meta)
     catch
       :exit, e -> FaultProcessor.create_response(e, meta)
     end
@@ -46,6 +47,7 @@ defmodule ExVerticalBooking.Response.Parser do
       {:ok, xml_response |> xpath(~x"//#{body_tag}/*"l) |> parse_elements() |> List.first(), meta}
     rescue
       e in ArgumentError -> FaultProcessor.create_response(e, meta)
+      e in FunctionClauseError -> FaultProcessor.create_response(e, meta)
     end
   end
 
