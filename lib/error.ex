@@ -38,7 +38,7 @@ defmodule ExVerticalBooking.Error do
     do: "Invalid endpoint"
 
   def humanize_error(:empty_payload),
-      do: "Empty payload"
+    do: "Empty payload"
 
   def humanize_error(:date_in_the_past_or_not_alowed),
     do: "Invalid date: updates in the past are not allowed"
@@ -64,5 +64,6 @@ defmodule ExVerticalBooking.Error do
   def humanize_error(reason) when is_binary(reason),
     do: reason
 
-  def humanise_error({:function_clause, reason}), do: "BadRPC with function clause #{reason}}"
+  def humanize_error({:function_clause, reason}), do: "Function clause error #{reason}}"
+  def humanize_error({:argument_error, reason}), do: "Argument error #{reason}}"
 end
