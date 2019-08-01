@@ -10,7 +10,8 @@ defmodule ExVerticalBooking.Response.FaultProcessor do
 
   def convert(%{faultcode: code, faultstring: _string}), do: Error.exception(code)
   def convert(%{"faultcode" => code, "faultstring" => _string}), do: Error.exception(code)
-  def convert({:fatal, _reason}), do: Error.exception(:xml_parsing_error)
+  def convert({:fatal, reason}), do: Error.exception({:fatal, reason})
+  def convert({:exit, reason}), do: Error.exception({:exit, reason})
   def convert({:badrpc, {_, reason}}), do: Error.exception(reason)
   def convert({:error, _, %{errors: [reason]}}), do: Error.exception(reason)
   def convert(%ArgumentError{} = reason), do: Error.exception({:argument_error, reason})

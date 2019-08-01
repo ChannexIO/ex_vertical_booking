@@ -13,7 +13,6 @@ defmodule ExVerticalBooking.Error do
   """
   @spec reason_for(neg_integer()) :: atom()
 
-  def reason_for(:xml_parsing_error), do: :xml_parsing_error
   def reason_for(:invalid_endpoint), do: :invalid_endpoint
   def reason_for(:empty_payload), do: :empty_payload
   def reason_for("15"), do: :date_in_the_past_or_not_alowed
@@ -23,6 +22,8 @@ defmodule ExVerticalBooking.Error do
   def reason_for("497"), do: :invalid_authorisation
   def reason_for({:function_clause, reason}), do: {:function_clause, reason}
   def reason_for({:argument_error, reason}), do: {:argument_error, reason}
+  def reason_for({:fatal, reason}), do: {:catch_error, reason}
+  def reason_for({:exit, reason}), do: {:catch_error, reason}
   def reason_for(_), do: :undefined_error
   def reason_for("SOAP-ENV:" <> _, _reason), do: :invalid_api_request
   def reason_for(_, _), do: :undefined_error
@@ -64,6 +65,7 @@ defmodule ExVerticalBooking.Error do
   def humanize_error(reason) when is_binary(reason),
     do: reason
 
-  def humanize_error({:function_clause, reason}), do: "Function clause error #{reason}}"
-  def humanize_error({:argument_error, reason}), do: "Argument error #{reason}}"
+  def humanize_error({:function_clause, reason}), do: "Function clause error: #{reason}}"
+  def humanize_error({:argument_error, reason}), do: "Argument error: #{reason}}"
+  def humanize_error({:catch_error, reason}), do: "Catch error: #{reason}}"
 end

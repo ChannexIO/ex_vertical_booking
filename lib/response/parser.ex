@@ -38,7 +38,8 @@ defmodule ExVerticalBooking.Response.Parser do
       e in ArgumentError -> FaultProcessor.create_response(e, meta)
       e in FunctionClauseError -> FaultProcessor.create_response(e, meta)
     catch
-      :exit, e -> FaultProcessor.create_response(e, meta)
+      :exit, e -> FaultProcessor.create_response({:exit, e}, meta)
+      :fatal, e -> FaultProcessor.create_response({:fatal, e}, meta)
     end
   end
 
@@ -52,6 +53,9 @@ defmodule ExVerticalBooking.Response.Parser do
     rescue
       e in ArgumentError -> FaultProcessor.create_response(e, meta)
       e in FunctionClauseError -> FaultProcessor.create_response(e, meta)
+    catch
+      :exit, e -> FaultProcessor.create_response({:exit, e}, meta)
+      :fatal, e -> FaultProcessor.create_response({:fatal, e}, meta)
     end
   end
 
