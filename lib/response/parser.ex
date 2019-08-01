@@ -19,6 +19,7 @@ defmodule ExVerticalBooking.Response.Parser do
   """
   @spec parse(String.t(), atom(), map) :: map()
   def parse(xml_response, :fault, meta) do
+    xml_response = String.trim(xml_response)
     try do
       fault_tag = get_fault_tag(xml_response)
 
