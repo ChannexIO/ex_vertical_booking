@@ -20,6 +20,7 @@ defmodule ExVerticalBooking.Response.Parser do
   @spec parse(String.t(), atom(), map) :: map()
   def parse(xml_response, :fault, meta) do
     xml_response = String.trim(xml_response)
+
     try do
       fault_tag = get_fault_tag(xml_response)
 
@@ -42,6 +43,8 @@ defmodule ExVerticalBooking.Response.Parser do
   end
 
   def parse(xml_response, _response_type, meta) do
+    xml_response = String.trim(xml_response)
+
     try do
       body_tag = get_body_tag(xml_response)
 
@@ -114,15 +117,6 @@ defmodule ExVerticalBooking.Response.Parser do
     Enum.uniq(keys) == keys
   end
 
-  defp get_envelope_namespace(xml_response) do
-    env_namespace = @soap_version_namespaces[soap_version()]
-
-    xml_response
-    |> xpath(~x"//namespace::*"l)
-    |> Enum.find(fn {_, _, _, _, namespace_url} -> namespace_url == env_namespace end)
-    |> elem(3)
-  end
-
   defp get_fault_tag(xml_response) do
     xml_response
     |> get_envelope_namespace()
@@ -135,6 +129,15 @@ defmodule ExVerticalBooking.Response.Parser do
     |> get_envelope_namespace()
     |> List.to_string()
     |> apply_namespace_to_tag("Body")
+  end
+
+  defp get_envelope_namespace(xml_response) do
+    env_namespace = @soap_version_namespaces[soap_version()]
+
+    xml_response
+    |> xpath(~x"//namespace::*"l)
+    |> Enum.find(fn {_, _, _, _, namespace_url} -> namespace_url == env_namespace end)
+    |> elem(3)
   end
 
   defp apply_namespace_to_tag(nil, tag), do: tag
