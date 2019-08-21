@@ -42,9 +42,9 @@ defmodule ExVerticalBooking.Request.Document do
 
   def generate({action, credentials, body}) do
     XmlBuilder.generate(:xml_decl, encoding: "UTF-8") <>
-      "\n" <>
       XmlBuilder.generate(
-        {:"SOAP-ENV:Envelope", @definitions, [header(action, credentials), body]}
+        {:"SOAP-ENV:Envelope", @definitions, [header(action, credentials), body]},
+        format: :none
       )
   end
 

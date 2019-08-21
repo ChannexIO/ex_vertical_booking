@@ -51,39 +51,20 @@ defmodule ExVerticalBooking.Request.DocumentTest do
   test "build/3" do
     {document, _meta} =
       Document.build(
-        {{:tag, %{element_1: 1, element_2: "two"}, ["Value_1", "Value_2"]}, @meta},
+        {{:tag, %{element_1: 1, element_2: "two"}, ["Value_1"]}, @meta},
         "TEST_Action",
         @credentials
       )
 
-    assert document =~ ~s(<?xml version="1.0" encoding="UTF-8"?>
-<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://www.opentravel.org/OTA/2003/05" xmlns:ns2="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:ns3="http://schemas.xmlsoap.org/ws/2004/08/addressing">
-  <SOAP-ENV:Header>
-    <ns2:Security SOAP-ENV:mustUnderstand="1">
-      <UsernameToken>
-        <Username>#{@username}</Username>
-        <Password>#{@password}</Password>
-      </UsernameToken>
-    </ns2:Security>
-    <ns3:MessageID>uuid:)
+    assert document =~
+             ~s"<?xml version=\"1.0\" encoding=\"UTF-8\"?><SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ns1=\"http://www.opentravel.org/OTA/2003/05\" xmlns:ns2=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" xmlns:ns3=\"http://schemas.xmlsoap.org/ws/2004/08/addressing\"><SOAP-ENV:Header><ns2:Security SOAP-ENV:mustUnderstand=\"1\"><UsernameToken><Username>#{
+               @username
+             }</Username><Password>#{@password}</Password></UsernameToken></ns2:Security><ns3:MessageID>uuid:"
 
-    assert document =~ ~s(</ns3:MessageID>
-    <ns3:To>#{@endpoint}</ns3:To>
-    <ns3:Action>TEST_ActionRQ</ns3:Action>
-    <ns3:From>
-      <ns3:Address>http://schemas.xmlsoap.org/ws/2004/12/addressing/role/anonymous</ns3:Address>
-    </ns3:From>
-  </SOAP-ENV:Header>
-  <SOAP-ENV:Body>
-    <ns1:TEST_ActionRQ TimeStamp=)
+    assert document =~
+             ~s(</ns3:MessageID><ns3:To>#{@endpoint}</ns3:To><ns3:Action>TEST_ActionRQ</ns3:Action><ns3:From><ns3:Address>http://schemas.xmlsoap.org/ws/2004/12/addressing/role/anonymous</ns3:Address></ns3:From></SOAP-ENV:Header><SOAP-ENV:Body><ns1:TEST_ActionRQ TimeStamp=)
 
-    assert document =~ ~s(Z" Version="1">
-      <tag element_1="1" element_2="two">
-        Value_1
-        Value_2
-      </tag>
-    </ns1:TEST_ActionRQ>
-  </SOAP-ENV:Body>
-</SOAP-ENV:Envelope>)
+    assert document =~
+             ~s(Z" Version="1"><tag element_1="1" element_2="two">Value_1</tag></ns1:TEST_ActionRQ></SOAP-ENV:Body></SOAP-ENV:Envelope>)
   end
 end
