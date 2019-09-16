@@ -1,10 +1,10 @@
-defmodule ExVerticalBooking.Response.OtaHotelResNotifTest do
+defmodule ExVerticalBooking.Response.OtaReadTest do
   use ExUnit.Case
   doctest ExVerticalBooking
-  @moduletag :ex_vertical_booking_response_ota_hotel_res_notif
+  @moduletag :ex_vertical_booking_response_ota_read
 
   alias ExVerticalBooking.Response.Converter
-  alias ExVerticalBooking.Response.OtaHotelResNotif
+  alias ExVerticalBooking.Response.OtaRead
 
   @raw_message {"OTA_ResRetrieveRS", %{},
                 [
@@ -167,67 +167,13 @@ defmodule ExVerticalBooking.Response.OtaHotelResNotifTest do
 
   @message %{
     OTA_ResRetrieveRS: %{
+      Success: %{},
       ReservationsList: [
         %{
           HotelReservation: %{
             "@CreateDateTime": '2020-09-22T08:32:48+02:00',
             "@ResStatus": 'Commit',
             "@RoomStayReservation": 'true',
-            ResGlobalInfo: %{
-              Comments: [
-                %{
-                  Comment: %{
-                    Text:
-                      "GUEST NAME:Mario ROSSI\nLate arrive\nNo smoking room\nNr. guests: 2\nCommission Amount: 146.25"
-                  }
-                }
-              ],
-              Guarantee: %{
-                GuaranteesAccepted: %{
-                  GuaranteeAccepted: %{
-                    "@PaymentTransactionTypeCode": 'charge',
-                    PaymentCard: %{
-                      "@CardCode": 'MC',
-                      "@CardNumber": '0000000000099',
-                      "@CardType": '1',
-                      "@ExpireDate": '0911',
-                      "@SeriesCode": '000',
-                      CardHolderName: "tizio"
-                    }
-                  }
-                }
-              },
-              HotelReservationIDs: %{
-                HotelReservationID: %{
-                  "@ResID_Type": '25',
-                  "@ResID_Value": '287329696/87030881|8947'
-                }
-              },
-              Profiles: %{
-                ProfileInfo: %{
-                  Profile: %{
-                    "@ProfileType": '10',
-                    CompanyInfo: %{
-                      AddressInfo: %{},
-                      BusinessLocale: %{
-                        AddressLine: "WETERINGSCHANS 28 - 4, 1017 SG",
-                        CityName: "AMSTERDAM",
-                        CountryName: "NL",
-                        PostalCode: "1000"
-                      },
-                      CompanyName: %{
-                        "@Code": '9606020',
-                        "@CodeContext": 'IATA',
-                        "@CompanyShortName": 'BOOKINGS GBPOPE B.V.'
-                      },
-                      TelephoneInfo: %{"@PhoneNumber": '0031-200005414', "@PhoneTechType": '1'}
-                    }
-                  },
-                  UniqueID: %{"@ID": '11', "@ID_Context": 'CRS', "@Type": '32'}
-                }
-              },
-              Total: %{"@AmountAfterTax": '731.25', "@CurrencyCode": 'GBP'}
-            },
             ResGuests: %{
               ResGuest: %{
                 Profiles: %{
@@ -255,8 +201,8 @@ defmodule ExVerticalBooking.Response.OtaHotelResNotifTest do
             RoomStays: [
               %{
                 RoomStay: %{
-                  GuestCounts: %{GuestCount: %{"@AgeQualifyingCode": '10', "@Count": '2'}},
-                  RatePlans: %{RatePlan: %{"@RatePlanCode": 'roomonly'}},
+                  GuestCounts: [%{GuestCount: %{"@AgeQualifyingCode": '10', "@Count": '2'}}],
+                  RatePlans: [%{RatePlan: %{"@RatePlanCode": 'roomonly'}}],
                   RoomRates: [
                     %{
                       RoomRate: %{
@@ -290,15 +236,76 @@ defmodule ExVerticalBooking.Response.OtaHotelResNotifTest do
               "@ID": '287329696/87030894|8953',
               "@ID_Context": 'CrsConfirmNumber',
               "@Type": '14'
+            },
+            ResGlobalInfo: %{
+              Comments: [
+                %{
+                  Comment: %{
+                    Text:
+                      "GUEST NAME:Mario ROSSI\nLate arrive\nNo smoking room\nNr. guests: 2\nCommission Amount: 146.25"
+                  }
+                }
+              ],
+              Guarantee: %{
+                GuaranteesAccepted: [
+                  %{
+                    GuaranteeAccepted: %{
+                      "@PaymentTransactionTypeCode": 'charge',
+                      PaymentCard: %{
+                        "@CardCode": 'MC',
+                        "@CardNumber": '0000000000099',
+                        "@CardType": '1',
+                        "@ExpireDate": '0911',
+                        "@SeriesCode": '000',
+                        CardHolderName: "tizio"
+                      }
+                    }
+                  }
+                ]
+              },
+              HotelReservationIDs: [
+                %{
+                  HotelReservationID: %{
+                    "@ResID_Type": '25',
+                    "@ResID_Value": '287329696/87030881|8947'
+                  }
+                }
+              ],
+              Total: %{"@AmountAfterTax": '731.25', "@CurrencyCode": 'GBP'},
+              Profiles: [
+                %{
+                  ProfileInfo: %{
+                    Profile: %{
+                      "@ProfileType": '10',
+                      CompanyInfo: %{
+                        AddressInfo: %{},
+                        BusinessLocale: %{
+                          AddressLine: "WETERINGSCHANS 28 - 4, 1017 SG",
+                          CityName: "AMSTERDAM",
+                          CountryName: "NL",
+                          PostalCode: "1000"
+                        },
+                        CompanyName: %{
+                          "@Code": '9606020',
+                          "@CodeContext": 'IATA',
+                          "@CompanyShortName": 'BOOKINGS GBPOPE B.V.'
+                        },
+                        TelephoneInfo: %{"@PhoneNumber": '0031-200005414', "@PhoneTechType": '1'}
+                      }
+                    },
+                    UniqueID: %{"@ID": '11', "@ID_Context": 'CRS', "@Type": '32'}
+                  }
+                }
+              ]
             }
           }
         }
-      ],
-      Success: %{}
+      ]
     }
   }
 
   test "convert" do
-    assert {:ok, @message, %{}} == Converter.convert({:ok, @raw_message, %{}}, OtaHotelResNotif.list_nodes())
+    assert {:ok, @message, %{}} ==
+             Converter.convert({:ok, @raw_message, %{}}, OtaRead.list_nodes())
   end
 end
