@@ -174,29 +174,66 @@ defmodule ExVerticalBooking.Response.OtaReadTest do
             "@CreateDateTime": '2020-09-22T08:32:48+02:00',
             "@ResStatus": 'Commit',
             "@RoomStayReservation": 'true',
-            ResGuests: %{
-              ResGuest: %{
-                Profiles: %{
-                  ProfileInfo: %{
-                    Profile: %{
-                      "@ProfileType": '1',
-                      Customer: %{
-                        "@BirthDate": '1950-12-31',
-                        Address: %{
-                          AddressLine: "via viole 15",
-                          CityName: "Roma",
-                          CountryName: "IT",
-                          PostalCode: "12345",
-                          StateProv: "RM"
-                        },
-                        Email: "prova@microsoft.com",
-                        PersonName: %{GivenName: "tizio", Surname: "caio"},
-                        Telephone: %{"@PhoneNumber": '0123456789', "@PhoneTechType": '1'}
+            ResGlobalInfo: %{
+              Comments: [
+                %{
+                  Comment: %{
+                    Text:
+                      "GUEST NAME:Mario ROSSI\nLate arrive\nNo smoking room\nNr. guests: 2\nCommission Amount: 146.25"
+                  }
+                }
+              ],
+              Guarantee: %{
+                GuaranteesAccepted: [
+                  %{
+                    GuaranteeAccepted: %{
+                      "@PaymentTransactionTypeCode": 'charge',
+                      PaymentCard: %{
+                        "@CardCode": 'MC',
+                        "@CardNumber": '0000000000099',
+                        "@CardType": '1',
+                        "@ExpireDate": '0911',
+                        "@SeriesCode": '000',
+                        CardHolderName: "tizio"
                       }
                     }
                   }
+                ]
+              },
+              HotelReservationIDs: [
+                %{
+                  HotelReservationID: %{
+                    "@ResID_Type": '25',
+                    "@ResID_Value": '287329696/87030881|8947'
+                  }
                 }
-              }
+              ],
+              Profiles: [
+                %{
+                  ProfileInfo: %{
+                    Profile: %{
+                      "@ProfileType": '10',
+                      CompanyInfo: %{
+                        AddressInfo: %{},
+                        BusinessLocale: %{
+                          AddressLine: "WETERINGSCHANS 28 - 4, 1017 SG",
+                          CityName: "AMSTERDAM",
+                          CountryName: "NL",
+                          PostalCode: "1000"
+                        },
+                        CompanyName: %{
+                          "@Code": '9606020',
+                          "@CodeContext": 'IATA',
+                          "@CompanyShortName": 'BOOKINGS GBPOPE B.V.'
+                        },
+                        TelephoneInfo: %{"@PhoneNumber": '0031-200005414', "@PhoneTechType": '1'}
+                      }
+                    },
+                    UniqueID: %{"@ID": '11', "@ID_Context": 'CRS', "@Type": '32'}
+                  }
+                }
+              ],
+              Total: %{"@AmountAfterTax": '731.25', "@CurrencyCode": 'GBP'}
             },
             RoomStays: [
               %{
@@ -237,67 +274,34 @@ defmodule ExVerticalBooking.Response.OtaReadTest do
               "@ID_Context": 'CrsConfirmNumber',
               "@Type": '14'
             },
-            ResGlobalInfo: %{
-              Comments: [
-                %{
-                  Comment: %{
-                    Text:
-                      "GUEST NAME:Mario ROSSI\nLate arrive\nNo smoking room\nNr. guests: 2\nCommission Amount: 146.25"
-                  }
-                }
-              ],
-              Guarantee: %{
-                GuaranteesAccepted: [
-                  %{
-                    GuaranteeAccepted: %{
-                      "@PaymentTransactionTypeCode": 'charge',
-                      PaymentCard: %{
-                        "@CardCode": 'MC',
-                        "@CardNumber": '0000000000099',
-                        "@CardType": '1',
-                        "@ExpireDate": '0911',
-                        "@SeriesCode": '000',
-                        CardHolderName: "tizio"
+            ResGuests: [
+              %{
+                ResGuest: %{
+                  Profiles: [
+                    %{
+                      ProfileInfo: %{
+                        Profile: %{
+                          "@ProfileType": '1',
+                          Customer: %{
+                            "@BirthDate": '1950-12-31',
+                            Address: %{
+                              AddressLine: "via viole 15",
+                              CityName: "Roma",
+                              CountryName: "IT",
+                              PostalCode: "12345",
+                              StateProv: "RM"
+                            },
+                            Email: "prova@microsoft.com",
+                            PersonName: %{GivenName: "tizio", Surname: "caio"},
+                            Telephone: %{"@PhoneNumber": '0123456789', "@PhoneTechType": '1'}
+                          }
+                        }
                       }
                     }
-                  }
-                ]
-              },
-              HotelReservationIDs: [
-                %{
-                  HotelReservationID: %{
-                    "@ResID_Type": '25',
-                    "@ResID_Value": '287329696/87030881|8947'
-                  }
+                  ]
                 }
-              ],
-              Total: %{"@AmountAfterTax": '731.25', "@CurrencyCode": 'GBP'},
-              Profiles: [
-                %{
-                  ProfileInfo: %{
-                    Profile: %{
-                      "@ProfileType": '10',
-                      CompanyInfo: %{
-                        AddressInfo: %{},
-                        BusinessLocale: %{
-                          AddressLine: "WETERINGSCHANS 28 - 4, 1017 SG",
-                          CityName: "AMSTERDAM",
-                          CountryName: "NL",
-                          PostalCode: "1000"
-                        },
-                        CompanyName: %{
-                          "@Code": '9606020',
-                          "@CodeContext": 'IATA',
-                          "@CompanyShortName": 'BOOKINGS GBPOPE B.V.'
-                        },
-                        TelephoneInfo: %{"@PhoneNumber": '0031-200005414', "@PhoneTechType": '1'}
-                      }
-                    },
-                    UniqueID: %{"@ID": '11', "@ID_Context": 'CRS', "@Type": '32'}
-                  }
-                }
-              ]
-            }
+              }
+            ]
           }
         }
       ]

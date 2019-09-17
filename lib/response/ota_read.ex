@@ -13,8 +13,8 @@ defmodule ExVerticalBooking.Response.OtaRead do
     "OTA_ResRetrieveRS/ReservationsList/HotelReservation/ResGlobalInfo/Guarantee/GuaranteesAccepted",
     "OTA_ResRetrieveRS/ReservationsList/HotelReservation/ResGlobalInfo/HotelReservationIDs",
     "OTA_ResRetrieveRS/ReservationsList/HotelReservation/ResGlobalInfo/Profiles",
-    "OTA_ResRetrieveRS/ReservationsList/HotelReservation/ResGlobalInfo/ResGuests",
-    "OTA_ResRetrieveRS/ReservationsList/HotelReservation/ResGlobalInfo/ResGuests/ResGuest/Profiles"
+    "OTA_ResRetrieveRS/ReservationsList/HotelReservation/ResGuests",
+    "OTA_ResRetrieveRS/ReservationsList/HotelReservation/ResGuests/ResGuest/Profiles"
   ]
 
   def list_nodes, do: @list_nodes
