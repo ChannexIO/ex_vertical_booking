@@ -4,7 +4,6 @@ defmodule ExVerticalBooking.Response.Parser do
   """
 
   import SweetXml, only: [xpath: 2, sigil_x: 2]
-  alias ExVerticalBooking.Error
   alias ExVerticalBooking.Response
   alias ExVerticalBooking.Response.FaultProcessor
 
@@ -24,16 +23,15 @@ defmodule ExVerticalBooking.Response.Parser do
     try do
       fault_tag = get_fault_tag(xml_response)
 
-      e =
-        xml_response
-        |> xpath(~x"//#{fault_tag}/*"l)
-        |> parse_elements()
-        |> Enum.reduce(%{}, fn el, acc ->
-          with {key, _, [value]} <- el do
-            Map.put(acc, key, value)
-          end
-        end)
-        |> FaultProcessor.create_response(meta)
+      xml_response
+      |> xpath(~x"//#{fault_tag}/*"l)
+      |> parse_elements()
+      |> Enum.reduce(%{}, fn el, acc ->
+        with {key, _, [value]} <- el do
+          Map.put(acc, key, value)
+        end
+      end)
+      |> FaultProcessor.create_response(meta)
     rescue
       e in ArgumentError -> FaultProcessor.create_response(e, meta)
       e in FunctionClauseError -> FaultProcessor.create_response(e, meta)
