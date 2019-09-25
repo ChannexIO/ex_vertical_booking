@@ -5,11 +5,11 @@ defmodule ExVerticalBooking.Response.Converter do
 
   def convert(response, _), do: response
 
-  def wrap(acc, {key, %{}, [value]}, _prev, _list_nodes) when is_binary(value) do
+  defp wrap(acc, {key, %{}, [value]}, _prev, _list_nodes) when is_binary(value) do
     Map.put(acc, atomize(key), value)
   end
 
-  def wrap(acc, {key, args, childs}, prev, list_nodes) do
+  defp wrap(acc, {key, args, childs}, prev, list_nodes) do
     Map.put(
       acc,
       atomize(key),
@@ -36,7 +36,7 @@ defmodule ExVerticalBooking.Response.Converter do
     )
   end
 
-  def get_type_for(path, list_nodes) do
+  defp get_type_for(path, list_nodes) do
     str_path = path |> Enum.reverse() |> Enum.join("/")
 
     if Enum.member?(list_nodes, str_path) do
