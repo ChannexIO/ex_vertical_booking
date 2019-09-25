@@ -1,4 +1,5 @@
 defmodule ExVerticalBooking.Response.OtaPing do
+  @behaviour ExVerticalBooking.Response.Converter
   alias ExVerticalBooking.Response.Converter
 
   @list_nodes []

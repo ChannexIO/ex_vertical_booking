@@ -1,4 +1,5 @@
 defmodule ExVerticalBooking.Response.OtaHotelBookingRuleNotif do
+  @behaviour ExVerticalBooking.Response.Converter
   alias ExVerticalBooking.Response.Converter
 
   @list_nodes []

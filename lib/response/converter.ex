@@ -1,4 +1,7 @@
 defmodule ExVerticalBooking.Response.Converter do
+  @callback list_nodes() :: list()
+  @callback convert({atom, any, any}) :: {:ok, map, any} | {:error, any, any}
+
   def convert({:ok, struct, meta}, list_nodes) do
     {:ok, wrap(%{}, struct, [], list_nodes), meta}
   end
