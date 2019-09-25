@@ -1,5 +1,4 @@
 defmodule ExVerticalBooking.Response.Converter do
-
   def convert({:ok, struct, meta}, list_nodes) do
     {:ok, wrap(%{}, struct, [], list_nodes), meta}
   end
@@ -11,23 +10,28 @@ defmodule ExVerticalBooking.Response.Converter do
   end
 
   def wrap(acc, {key, args, childs}, prev, list_nodes) do
-    arguments =
-      Enum.reduce(
-        args,
-        %{},
-        fn {key, value}, acc -> Map.put(acc, atomize("@#{key}"), value) end
-      )
-
     Map.put(
       acc,
       atomize(key),
       case get_type_for([key | prev], list_nodes) do
         :list ->
-          Enum.reduce(childs, [], fn child, acc -> [wrap(%{}, child, [key | prev], list_nodes) | acc] end)
+          childs
+          |> Enum.reduce([], fn child, acc ->
+            [wrap(%{}, child, [key | prev], list_nodes) | acc]
+          end)
           |> Enum.reverse()
 
         :map ->
-          Enum.reduce(childs, arguments, fn child, acc -> wrap(acc, child, [key | prev], list_nodes) end)
+          arguments =
+            Enum.reduce(
+              args,
+              %{},
+              fn {key, value}, acc -> Map.put(acc, atomize("@#{key}"), value) end
+            )
+
+          Enum.reduce(childs, arguments, fn child, acc ->
+            wrap(acc, child, [key | prev], list_nodes)
+          end)
       end
     )
   end
