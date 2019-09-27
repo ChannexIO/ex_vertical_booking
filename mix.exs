@@ -1,7 +1,7 @@
 defmodule ExVerticalBooking.MixProject do
   use Mix.Project
 
-  @version "0.1.1"
+  @version "0.2.0"
 
   def project do
     [
@@ -11,7 +11,7 @@ defmodule ExVerticalBooking.MixProject do
       config_path: "./config/config.exs",
       deps_path: "./deps",
       lockfile: "./mix.lock",
-      elixir: "~> 1.8",
+      elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       name: "ExVerticalBooking",
       source_url: "https://github.com/ChannexIO/ex_vertical_booking",

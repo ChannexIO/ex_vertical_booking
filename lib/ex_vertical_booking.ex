@@ -15,6 +15,13 @@ defmodule ExVerticalBooking do
     OtaRead
   }
 
+  alias ExVerticalBooking.Response.OtaHotelBookingRuleNotif, as: OtaHotelBookingRuleNotifConverter
+  alias ExVerticalBooking.Response.OtaHotelInvCountNotif, as: OtaHotelInvCountNotifConverter
+  alias ExVerticalBooking.Response.OtaHotelRateAmountNotif, as: OtaHotelRateAmountNotifConverter
+  alias ExVerticalBooking.Response.OtaHotelResNotif, as: OtaHotelResNotifConverter
+  alias ExVerticalBooking.Response.OtaPing, as: OtaPingConverter
+  alias ExVerticalBooking.Response.OtaRead, as: OtaReadConverter
+
   @type credentials :: %{endpoint: String.t(), password: String.t(), user: String.t()}
 
   @doc """
@@ -32,6 +39,7 @@ defmodule ExVerticalBooking do
     credentials
     |> OtaPing.execute(prepare_meta())
     |> Response.parse_response()
+    |> OtaPingConverter.convert()
   end
 
   @doc """
@@ -43,6 +51,7 @@ defmodule ExVerticalBooking do
     params
     |> OtaHotelInvCountNotif.execute(credentials, prepare_meta())
     |> Response.parse_response()
+    |> OtaHotelInvCountNotifConverter.convert()
   end
 
   @doc """
@@ -54,6 +63,7 @@ defmodule ExVerticalBooking do
     params
     |> OtaHotelRateAmountNotif.execute(credentials, prepare_meta())
     |> Response.parse_response()
+    |> OtaHotelRateAmountNotifConverter.convert()
   end
 
   @doc """
@@ -65,6 +75,7 @@ defmodule ExVerticalBooking do
     params
     |> OtaHotelBookingRuleNotif.execute(credentials, prepare_meta())
     |> Response.parse_response()
+    |> OtaHotelBookingRuleNotifConverter.convert()
   end
 
   @doc """
@@ -98,6 +109,7 @@ defmodule ExVerticalBooking do
     }
     |> OtaHotelResNotif.execute(credentials, prepare_meta())
     |> Response.parse_response()
+    |> OtaHotelResNotifConverter.convert()
   end
 
   @doc """
@@ -109,6 +121,7 @@ defmodule ExVerticalBooking do
     params
     |> OtaRead.execute(credentials, prepare_meta())
     |> Response.parse_response()
+    |> OtaReadConverter.convert()
   end
 
   defp prepare_meta() do

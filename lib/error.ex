@@ -20,13 +20,19 @@ defmodule ExVerticalBooking.Error do
   def reason_for("402"), do: :invalid_room_type
   def reason_for("404"), do: :invalid_date_range
   def reason_for("497"), do: :invalid_authorisation
+  def reason_for({:http_error, {"15", string}}), do: {:date_in_the_past_or_not_alowed, string}
+  def reason_for({:http_error, {"321", string}}), do: {:required_field_missing, string}
+  def reason_for({:http_error, {"402", string}}), do: {:invalid_room_type, string}
+  def reason_for({:http_error, {"404", string}}), do: {:invalid_date_range, string}
+  def reason_for({:http_error, {"497", string}}), do: {:invalid_authorization, string}
+  def reason_for({:http_error, {code, string}}), do: {:http_error, {code, string}}
   def reason_for({:function_clause, reason}), do: {:function_clause, reason}
   def reason_for({:argument_error, reason}), do: {:argument_error, reason}
   def reason_for({:fatal, reason}), do: {:catch_error, reason}
   def reason_for({:exit, reason}), do: {:catch_error, reason}
-  def reason_for(_), do: :undefined_error
-  def reason_for("SOAP-ENV:" <> _, _reason), do: :invalid_api_request
-  def reason_for(_, _), do: :undefined_error
+  def reason_for(e), do: {:undefined_error, e}
+  def reason_for("SOAP-ENV:" <> _, reason), do: {:invalid_api_request, reason}
+  def reason_for(arg1, arg2), do: {:undefined_error, {arg1, arg2}}
 
   @doc """
   Convert reason atom to human readable string
@@ -56,16 +62,31 @@ defmodule ExVerticalBooking.Error do
   def humanize_error(:invalid_authorisation),
     do: "Authorization error"
 
-  def humanize_error(:invalid_api_request),
-    do: "Invalid builded structure of API request"
-
   def humanize_error(:undefined_error),
     do: "Undefined error"
 
   def humanize_error(reason) when is_binary(reason),
     do: reason
 
+  def humanize_error({:invalid_api_request, reason}),
+    do: "Invalid builded structure of API request: #{reason}"
+
   def humanize_error({:function_clause, reason}), do: "Function clause error: #{reason}}"
   def humanize_error({:argument_error, reason}), do: "Argument error: #{reason}}"
   def humanize_error({:catch_error, reason}), do: "Catch error: #{reason}}"
+
+  def humanize_error({:date_in_the_past_or_not_alowed, reason}),
+    do: "Invalid date: updates in the past are not allowed: #{reason}}"
+
+  def humanize_error({:required_field_missing, reason}),
+    do: "Required field missing error: #{reason}}"
+
+  def humanize_error({:invalid_room_type, reason}), do: "Invalid room type error: #{reason}}"
+  def humanize_error({:invalid_date_range, reason}), do: "Invalid date range error: #{reason}}"
+
+  def humanize_error({:invalid_authorization, reason}),
+    do: "Invalid authorization error: #{reason}}"
+
+  def humanize_error({:undefined_error, reason}), do: "Undefined error: #{reason}}"
+  def humanize_error(reason), do: "Undefined error: #{reason}}"
 end
