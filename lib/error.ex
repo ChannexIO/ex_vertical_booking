@@ -19,12 +19,12 @@ defmodule ExVerticalBooking.Error do
   def reason_for("321"), do: :required_field_missing
   def reason_for("402"), do: :invalid_room_type
   def reason_for("404"), do: :invalid_date_range
-  def reason_for("497"), do: :invalid_authorisation
+  def reason_for("497"), do: :invalid_credentials
   def reason_for({:http_error, {"15", string}}), do: {:date_in_the_past_or_not_alowed, string}
   def reason_for({:http_error, {"321", string}}), do: {:required_field_missing, string}
   def reason_for({:http_error, {"402", string}}), do: {:invalid_room_type, string}
   def reason_for({:http_error, {"404", string}}), do: {:invalid_date_range, string}
-  def reason_for({:http_error, {"497", string}}), do: {:invalid_authorization, string}
+  def reason_for({:http_error, {"497", string}}), do: {:invalid_credentials, string}
   def reason_for({:http_error, {code, string}}), do: {:http_error, {code, string}}
   def reason_for({:function_clause, reason}), do: {:function_clause, reason}
   def reason_for({:argument_error, reason}), do: {:argument_error, reason}
@@ -59,8 +59,8 @@ defmodule ExVerticalBooking.Error do
   def humanize_error(:invalid_room_type),
     do: "Invalid room type"
 
-  def humanize_error(:invalid_authorisation),
-    do: "Authorization error"
+  def humanize_error(:invalid_credentials),
+    do: "Invalid credentials error"
 
   def humanize_error(:undefined_error),
     do: "Undefined error"
@@ -84,8 +84,8 @@ defmodule ExVerticalBooking.Error do
   def humanize_error({:invalid_room_type, reason}), do: "Invalid room type error: #{reason}}"
   def humanize_error({:invalid_date_range, reason}), do: "Invalid date range error: #{reason}}"
 
-  def humanize_error({:invalid_authorization, reason}),
-    do: "Invalid authorization error: #{reason}}"
+  def humanize_error({:invalid_credentials, reason}),
+    do: "Invalid credentials error: #{reason}}"
 
   def humanize_error({:undefined_error, reason}), do: "Undefined error: #{reason}}"
   def humanize_error(reason), do: "Undefined error: #{reason}}"

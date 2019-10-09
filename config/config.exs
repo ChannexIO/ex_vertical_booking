@@ -8,7 +8,7 @@ use Mix.Config
 # if you want to provide default values for your application for
 # third-party users, it should be done in your "mix.exs" file.
 
-config :soap, :globals, version: "1.1"
+config :ex_vertical_booking, :globals, version: "1.1"
 
 # You can also configure a third-party app:
 #

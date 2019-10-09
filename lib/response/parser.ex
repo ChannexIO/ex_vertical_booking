@@ -145,7 +145,7 @@ defmodule ExVerticalBooking.Response.Parser do
   defp apply_namespace_to_tag(nil, tag), do: tag
   defp apply_namespace_to_tag(env_namespace, tag), do: env_namespace <> ":" <> tag
 
-  defp soap_version, do: Application.fetch_env!(:soap, :globals)[:version]
+  defp soap_version, do: Application.fetch_env!(:ex_vertical_booking, :globals)[:version]
 
   def handle_response(
         {:ok,
