@@ -15,11 +15,6 @@ defmodule ExVerticalBooking.Error do
 
   def reason_for(:invalid_endpoint), do: :invalid_endpoint
   def reason_for(:empty_payload), do: :empty_payload
-  def reason_for("15"), do: :date_in_the_past_or_not_alowed
-  def reason_for("321"), do: :required_field_missing
-  def reason_for("402"), do: :invalid_room_type
-  def reason_for("404"), do: :invalid_date_range
-  def reason_for("497"), do: :invalid_credentials
   def reason_for({:http_error, {"15", string}}), do: {:date_in_the_past_or_not_alowed, string}
   def reason_for({:http_error, {"112", string}}), do: {:too_many_nights, string}
   def reason_for({:http_error, {"321", string}}), do: {:required_field_missing, string}
@@ -47,21 +42,6 @@ defmodule ExVerticalBooking.Error do
 
   def humanize_error(:empty_payload),
     do: "Empty payload"
-
-  def humanize_error(:date_in_the_past_or_not_alowed),
-    do: "Invalid date: updates in the past are not allowed"
-
-  def humanize_error(:required_field_missing),
-    do: "Required field missing"
-
-  def humanize_error(:invalid_date_range),
-    do: "Invalid start/end date combination"
-
-  def humanize_error(:invalid_room_type),
-    do: "Invalid room type"
-
-  def humanize_error(:invalid_credentials),
-    do: "Invalid credentials error"
 
   def humanize_error(:undefined_error),
     do: "Undefined error"
