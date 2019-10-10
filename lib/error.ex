@@ -15,12 +15,8 @@ defmodule ExVerticalBooking.Error do
 
   def reason_for(:invalid_endpoint), do: :invalid_endpoint
   def reason_for(:empty_payload), do: :empty_payload
-  def reason_for("15"), do: :date_in_the_past_or_not_alowed
-  def reason_for("321"), do: :required_field_missing
-  def reason_for("402"), do: :invalid_room_type
-  def reason_for("404"), do: :invalid_date_range
-  def reason_for("497"), do: :invalid_credentials
   def reason_for({:http_error, {"15", string}}), do: {:date_in_the_past_or_not_alowed, string}
+  def reason_for({:http_error, {"112", string}}), do: {:too_many_nights, string}
   def reason_for({:http_error, {"321", string}}), do: {:required_field_missing, string}
   def reason_for({:http_error, {"402", string}}), do: {:invalid_room_type, string}
   def reason_for({:http_error, {"404", string}}), do: {:invalid_date_range, string}
@@ -47,21 +43,6 @@ defmodule ExVerticalBooking.Error do
   def humanize_error(:empty_payload),
     do: "Empty payload"
 
-  def humanize_error(:date_in_the_past_or_not_alowed),
-    do: "Invalid date: updates in the past are not allowed"
-
-  def humanize_error(:required_field_missing),
-    do: "Required field missing"
-
-  def humanize_error(:invalid_date_range),
-    do: "Invalid start/end date combination"
-
-  def humanize_error(:invalid_room_type),
-    do: "Invalid room type"
-
-  def humanize_error(:invalid_credentials),
-    do: "Invalid credentials error"
-
   def humanize_error(:undefined_error),
     do: "Undefined error"
 
@@ -69,24 +50,38 @@ defmodule ExVerticalBooking.Error do
     do: reason
 
   def humanize_error({:invalid_api_request, reason}),
-    do: "Invalid builded structure of API request: #{reason}"
+    do: "Invalid builded structure of API request: #{inspect(reason)}"
 
-  def humanize_error({:function_clause, reason}), do: "Function clause error: #{reason}}"
-  def humanize_error({:argument_error, reason}), do: "Argument error: #{reason}}"
-  def humanize_error({:catch_error, reason}), do: "Catch error: #{reason}}"
+  def humanize_error({:function_clause, reason}),
+    do: "Function clause error: #{inspect(reason)}}"
+
+  def humanize_error({:argument_error, reason}),
+    do: "Argument error: #{inspect(reason)}}"
+
+  def humanize_error({:catch_error, reason}),
+    do: "Catch error: #{inspect(reason)}}"
 
   def humanize_error({:date_in_the_past_or_not_alowed, reason}),
-    do: "Invalid date: updates in the past are not allowed: #{reason}}"
+    do: "Invalid date: updates in the past are not allowed: #{inspect(reason)}}"
 
   def humanize_error({:required_field_missing, reason}),
-    do: "Required field missing error: #{reason}}"
+    do: "Required field missing error: #{inspect(reason)}}"
 
-  def humanize_error({:invalid_room_type, reason}), do: "Invalid room type error: #{reason}}"
-  def humanize_error({:invalid_date_range, reason}), do: "Invalid date range error: #{reason}}"
+  def humanize_error({:invalid_room_type, reason}),
+    do: "Invalid room type error: #{inspect(reason)}}"
+
+  def humanize_error({:invalid_date_range, reason}),
+    do: "Invalid date range error: #{inspect(reason)}}"
 
   def humanize_error({:invalid_credentials, reason}),
-    do: "Invalid credentials error: #{reason}}"
+    do: "Invalid credentials error: #{inspect(reason)}}"
 
-  def humanize_error({:undefined_error, reason}), do: "Undefined error: #{reason}}"
-  def humanize_error(reason), do: "Undefined error: #{reason}}"
+  def humanize_error({:too_many_nights, reason}),
+    do: "Too many nights: Maximum update limit reached (date range max = 31): #{inspect(reason)}}"
+
+  def humanize_error({:undefined_error, reason}),
+    do: "Undefined error: #{inspect(reason)}}"
+
+  def humanize_error(reason),
+    do: "Undefined error: #{inspect(reason)}}"
 end
