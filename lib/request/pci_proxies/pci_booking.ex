@@ -1,26 +1,16 @@
 defmodule ExVerticalBooking.Request.PCIProxies.PCIBooking do
   alias ExVerticalBooking.Request
   @api_endpoint "https://service.pcibooking.net/api"
-  @card_types %{
-    1 => :visa,
-    2 => :mastercard,
-    4 => :discover,
-    8 => :amex,
-    16 => :en_route,
-    32 => :jcb,
-    64 => :diners,
-    256 => :maestro
-  }
 
   @spec proxy_send({String.t(), map()}, map()) :: {:ok, map(), map()} | {:error, map(), map()}
   def proxy_send({document, %{success: true} = meta}, %{endpoint: endpoint, api_key: api_key}) do
-    url = get_tokenized_booking_url(endpoint)
-    with {:ok, response, meta} <-
-           Request.send({document, meta}, %{endpoint: "#{@api_endpoint}#{url}"}, headers(api_key)),
+    with {:ok, temp_session} <- start_temporary_session(api_key),
+         url <- get_tokenized_booking_url(endpoint, temp_session),
+         {:ok, response, meta} <- send_request(url, {document, meta}, api_key),
          %{headers: headers} <- meta do
       {:ok, response,
        Map.put(meta, :pci, %{
-         token: get_from(headers, "X-VERTICALBOOKINGFETCHCC"),
+         tokens: headers |> get_from("X-VERTICALBOOKINGFETCHCC") |> String.split(";"),
          errors: get_from(headers, "X-pciBooking-Tokenization-Errors"),
          warnings: get_from(headers, "X-pciBooking-Tokenization-Warnings")
        })}
@@ -31,13 +21,23 @@ defmodule ExVerticalBooking.Request.PCIProxies.PCIBooking do
     Request.send(payload, credentials)
   end
 
-  defp get_tokenized_booking_url(endpoint) do
+  defp get_tokenized_booking_url(endpoint, temp_session) do
     get_url("/payments/paycard/capture",
+      sessionToken: temp_session,
       httpMethod: "POST",
       profileName: "VerticalBooking",
       targetURI: endpoint,
       saveCVV: true
     )
+  end
+
+  defp start_temporary_session(api_key) do
+    with {:ok, body, _} <-
+           send_request("/payments/paycard/tempsession", {"", %{success: true}}, api_key) do
+      {:ok, String.replace(body.body, "\"", "")}
+    else
+      error -> error
+    end
   end
 
   defp get_url(url, arguments) do
@@ -67,5 +67,9 @@ defmodule ExVerticalBooking.Request.PCIProxies.PCIBooking do
     else
       _ -> nil
     end
+  end
+
+  defp send_request(url, body, api_key) do
+    Request.send(body, %{endpoint: "#{@api_endpoint}#{url}"}, headers(api_key))
   end
 end
