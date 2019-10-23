@@ -13,7 +13,6 @@ defmodule ExVerticalBooking.Request do
       {:ok, parsed_response,
        Map.merge(meta, %{
          response: payload.body,
-         headers: payload.headers,
          finished_at: DateTime.utc_now(),
          request: document
        })}
