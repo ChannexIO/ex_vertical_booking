@@ -7,18 +7,62 @@ defmodule ExVerticalBooking.Request.PCIProxies.PCIBooking do
     with {:ok, temp_session} <- start_temporary_session(api_key),
          url <- get_tokenized_booking_url(endpoint, temp_session),
          {:ok, response, meta} <- send_request(url, {document, meta}, api_key),
-         %{headers: headers} <- meta do
-      {:ok, response,
-       Map.put(meta, :pci, %{
-         tokens: headers |> get_from("X-VERTICALBOOKINGFETCHCC") |> String.split(";"),
-         errors: get_from(headers, "X-pciBooking-Tokenization-Errors"),
-         warnings: get_from(headers, "X-pciBooking-Tokenization-Warnings")
-       })}
+         pci <- response |> parse_headers(meta) |> convert_token_headers() do
+      {:ok, response, Map.put(meta, :pci, pci)}
     end
   end
 
   def proxy_send(payload, credentials) do
     Request.send(payload, credentials)
+  end
+
+  def get_token_meta(token, api_key) do
+    token
+    |> get_token_meta_url()
+    |> HTTPoison.get(headers(api_key))
+  end
+
+  defp parse_headers(_, %{headers: headers}) do
+    # The direction of the headers sequence is critical!
+    %{
+      tokens: split(get_from(headers, "X-VERTICALBOOKINGFETCHCC"), ";"),
+      errors: split(get_from(headers, "X-pciBooking-Tokenization-Errors"), ";;"),
+      warnings: split(get_from(headers, "X-pciBooking-Tokenization-Warnings"), ";;")
+    }
+  end
+
+  defp split(nil, _delimiter) , do: []
+  defp split(header, delimiter), do: String.split(header, delimiter)
+
+  defp parse_headers(response, meta) do
+    {:error, response,
+     Map.merge(meta, %{success: false, errors: ["Response not content any headers" | meta.errors]})}
+  end
+
+  defp convert_token_headers(%{tokens: [], errors: [], warnings: []}) do
+    %{}
+  end
+
+  defp convert_token_headers(%{tokens: tokens, errors: [], warnings: []}) do
+    encapsulate_tokens(tokens)
+  end
+
+  defp convert_token_headers(%{tokens: tokens, errors: [], warnings: warnings}) do
+    Enum.reduce(tokens, {%{}, 0}, fn token, {map, count} ->
+      {Map.put(map, count + 1, token), count + 1}
+    end)
+  end
+
+  defp encapsulate_tokens(tokens) do
+    Enum.reduce(tokens, {%{}, 0}, fn token, {map, count} ->
+      {Map.put(map, count + 1, %{token: token}), count + 1}
+    end)
+  end
+
+  defp get_token_meta_url(token) do
+    get_url("https://service.pcibooking.net/api/payments/paycard/meta",
+      ref: token |> String.split("/") |> List.last
+    )
   end
 
   defp get_tokenized_booking_url(endpoint, temp_session) do
@@ -28,6 +72,7 @@ defmodule ExVerticalBooking.Request.PCIProxies.PCIBooking do
       profileName: "VerticalBooking",
       targetURI: endpoint,
       saveCVV: true
+      #      eliminateCardDuplication: true
     )
   end
 
