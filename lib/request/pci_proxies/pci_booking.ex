@@ -31,7 +31,7 @@ defmodule ExVerticalBooking.Request.PCIProxies.PCIBooking do
     }
   end
 
-  defp split(nil, _delimiter) , do: []
+  defp split(nil, _delimiter), do: []
   defp split(header, delimiter), do: String.split(header, delimiter)
 
   defp parse_headers(response, meta) do
@@ -40,11 +40,11 @@ defmodule ExVerticalBooking.Request.PCIProxies.PCIBooking do
   end
 
   defp convert_token_headers(%{tokens: [], errors: [], warnings: []}) do
-    %{}
+    []
   end
 
   defp convert_token_headers(%{tokens: tokens, errors: [], warnings: []}) do
-    encapsulate_tokens(tokens)
+    tokens |> encapsulate_tokens() |> Enum.map(fn {key, value} -> value end)
   end
 
   defp convert_token_headers(%{tokens: tokens, errors: [], warnings: warnings}) do
@@ -61,7 +61,7 @@ defmodule ExVerticalBooking.Request.PCIProxies.PCIBooking do
 
   defp get_token_meta_url(token) do
     get_url("https://service.pcibooking.net/api/payments/paycard/meta",
-      ref: token |> String.split("/") |> List.last
+      ref: token |> String.split("/") |> List.last()
     )
   end
 
