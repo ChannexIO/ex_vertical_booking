@@ -1,32 +1,43 @@
 defmodule ExVerticalBooking.Request do
+  @moduledoc "Get HTTP request after validation payload"
   alias ExVerticalBooking.Response.Parser
 
-  def send({document, %{success: true} = meta}, %{endpoint: endpoint}) do
-    {_, payload} = response = HTTPoison.post(endpoint, document, [], [])
-    parsed_response = Parser.handle_response(response)
+  @spec send({String.t(), map()}, map(), keyword()) ::
+          {:ok, map(), map()} | {:error, map(), map()}
+  def send(params, credentials, headers \\ [])
 
-    meta =
-      meta
-      |> Map.put(:finished_at, DateTime.utc_now())
-      |> Map.put(:request, document)
+  def send({document, %{success: true} = meta}, %{endpoint: endpoint}, headers) do
+    {_, payload} = response = HTTPoison.post(endpoint, document, headers, [])
 
-    with {:ok, parsed_response} <- parsed_response do
-      {:ok, parsed_response, meta |> Map.put(:response, payload.body)}
+    with {:ok, parsed_response} <- Parser.handle_response(response) do
+      {:ok, parsed_response,
+       Map.merge(meta, %{
+         response: payload.body,
+         headers: payload.headers,
+         finished_at: DateTime.utc_now(),
+         request: document
+       })}
     else
       {:error, reason} ->
-        {:error, response, meta |> Map.put(:success, false) |> Map.put(:errors, [reason])}
+        {:error, response,
+         Map.merge(meta, %{
+           success: false,
+           errors: [reason],
+           finished_at: DateTime.utc_now(),
+           request: document
+         })}
     end
   end
 
-  def send({document, %{success: false} = meta}, _) do
-    {:error, document, meta |> Map.put(:success, false) |> Map.put(:errors, meta.errors)}
+  def send({document, %{success: false} = meta}, _, _opts) do
+    {:error, document, Map.merge(meta, %{success: false, errors: meta.errors})}
   end
 
-  def send({:error, document, meta}, _) do
-    {:error, document, meta |> Map.put(:success, false) |> Map.put(:errors, meta.errors)}
+  def send({:error, document, meta}, _, _opts) do
+    {:error, document, Map.merge(meta, %{success: false, errors: meta.errors})}
   end
 
-  def send({document, meta}, _) do
-    {:error, document, meta |> Map.put(:success, false) |> Map.put(:errors, [:invalid_endpoint])}
+  def send({document, meta}, _, _opts) do
+    {:error, document, Map.merge(meta, %{success: false, errors: [:invalid_endpoint]})}
   end
 end

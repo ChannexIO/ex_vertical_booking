@@ -1,6 +1,6 @@
 defmodule ExVerticalBooking.Request.OtaRead do
   alias ExVerticalBooking.Meta
-  alias ExVerticalBooking.Request
+  alias ExVerticalBooking.Request.PCIProxies.PCIBooking
   alias ExVerticalBooking.Request.{Document}
   @action "OTA_Read"
 
@@ -14,7 +14,7 @@ defmodule ExVerticalBooking.Request.OtaRead do
     params
     |> build_read(meta)
     |> Document.build(@action, credentials)
-    |> Request.send(credentials)
+    |> PCIBooking.proxy_send(credentials)
   end
 
   @spec build_read(%{hotel_code: String.t()}, Meta.t()) :: {{atom(), map | nil, list | nil}, Meta.t()}
