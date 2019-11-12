@@ -33,7 +33,7 @@ defmodule ExVerticalBooking.Request.Document do
   end
 
   def build_operation_element(addition, action, payload_element) do
-    {:"ns1:#{action}RQ", build_operation(addition), [payload_element]}
+    {:"ns1:#{action}", build_operation(addition), [payload_element]}
   end
 
   def build_body(addition, action, payload_element) do
@@ -63,7 +63,7 @@ defmodule ExVerticalBooking.Request.Document do
     message_id_element = XmlBuilder.element(:"ns3:MessageID", "uuid:#{UUID.uuid4()}")
 
     to_element = XmlBuilder.element(:"ns3:To", credentials.endpoint)
-    action_element = XmlBuilder.element(:"ns3:Action", "#{action}RQ")
+    action_element = XmlBuilder.element(:"ns3:Action", "#{action}")
 
     address_element =
       XmlBuilder.element(

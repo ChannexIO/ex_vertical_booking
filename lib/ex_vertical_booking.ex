@@ -10,7 +10,9 @@ defmodule ExVerticalBooking do
     OtaHotelBookingRuleNotif,
     OtaHotelInvCountNotif,
     OtaHotelRateAmountNotif,
+    OtaHotelRatePlanQuery,
     OtaHotelResNotif,
+    OtaHotelRoomStayQuery,
     OtaPing,
     OtaRead
   }
@@ -18,7 +20,9 @@ defmodule ExVerticalBooking do
   alias ExVerticalBooking.Response.OtaHotelBookingRuleNotif, as: OtaHotelBookingRuleNotifConverter
   alias ExVerticalBooking.Response.OtaHotelInvCountNotif, as: OtaHotelInvCountNotifConverter
   alias ExVerticalBooking.Response.OtaHotelRateAmountNotif, as: OtaHotelRateAmountNotifConverter
+  alias ExVerticalBooking.Response.OtaHotelRatePlanQuery, as: OtaHotelRatePlanQueryConverter
   alias ExVerticalBooking.Response.OtaHotelResNotif, as: OtaHotelResNotifConverter
+  alias ExVerticalBooking.Response.OtaHotelRoomStayQuery, as: OtaHotelRoomStayQueryConverter
   alias ExVerticalBooking.Response.OtaPing, as: OtaPingConverter
   alias ExVerticalBooking.Response.OtaRead, as: OtaReadConverter
 
@@ -122,6 +126,31 @@ defmodule ExVerticalBooking do
     |> OtaRead.execute(credentials, prepare_meta())
     |> Response.parse_response()
     |> OtaReadConverter.convert()
+  end
+
+
+  @doc """
+  This method is used to RatePlan querying
+  """
+  @spec ota_hotel_rate_plan_query(OtaHotelRatePlanQuery.t(), credentials) ::
+          {:ok, any(), Meta.t()} | {:error, map(), Meta.t()}
+  def ota_hotel_rate_plan_query(%{hotel_code: _, rate_plan_candidate: _} = params, credentials) do
+    params
+    |> OtaHotelRatePlanQuery.execute(credentials, prepare_meta())
+    |> Response.parse_response()
+    |> OtaHotelRatePlanQueryConverter.convert()
+  end
+
+  @doc """
+  This method is used to RoomStay querying
+  """
+  @spec ota_hotel_room_stay_query(OtaHotelRoomStayQuery.t(), credentials) ::
+          {:ok, any(), Meta.t()} | {:error, map(), Meta.t()}
+  def ota_hotel_room_stay_query(%{hotel_code: _, room_stay_candidate: _} = params, credentials) do
+    params
+    |> OtaHotelRoomStayQuery.execute(credentials, prepare_meta())
+    |> Response.parse_response()
+    |> OtaHotelRoomStayQueryConverter.convert()
   end
 
   defp prepare_meta() do
