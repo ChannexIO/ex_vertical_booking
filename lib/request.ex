@@ -7,7 +7,9 @@ defmodule ExVerticalBooking.Request do
   def send(params, credentials, headers \\ [])
 
   def send({document, %{success: true} = meta}, %{endpoint: endpoint}, headers) do
-    {_, payload} = response = HTTPoison.post(endpoint, document, headers, [])
+    {_, payload} =
+      response =
+      HTTPoison.post(endpoint, document, headers, timeout: 60_000, recv_timeout: 120_000)
 
     with {:ok, parsed_response} <- Parser.handle_response(response) do
       {:ok, parsed_response,
