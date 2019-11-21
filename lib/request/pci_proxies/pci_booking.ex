@@ -25,7 +25,7 @@ defmodule ExVerticalBooking.Request.PCIProxies.PCIBooking do
   def get_token_meta(token, api_key) do
     token
     |> get_token_meta_url()
-    |> HTTPoison.get(headers(api_key))
+    |> HTTPoison.get(headers(api_key), timeout: 60_000, recv_timeout: 120_000)
   end
 
   defp start_temporary_session(api_key) do
