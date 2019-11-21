@@ -156,6 +156,7 @@ defmodule ExVerticalBooking.Response.Parser do
            status_code: status_code
          }}
       ) do
+    headers = Enum.map(headers, &Tuple.to_list/1)
     {:ok,
      %Response{body: body, headers: headers, request_url: request_url, status_code: status_code}}
   end

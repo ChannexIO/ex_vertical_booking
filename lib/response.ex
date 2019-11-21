@@ -7,7 +7,7 @@ defmodule ExVerticalBooking.Response do
 
   @type t :: %__MODULE__{
           body: any(),
-          headers: list(tuple()),
+          headers: list(list()),
           request_url: String.t(),
           status_code: pos_integer()
         }

@@ -898,19 +898,20 @@ Commission Amount: 146.25
     meta: %{
       finished_at: ~U[2019-10-23 11:21:38.813141Z],
       headers: [
-        {"Cache-Control", "no-cache"},
-        {"Pragma", "no-cache"},
-        {"Content-Length", "7956"},
-        {"Content-Type", "application/xml; charset=UTF-8"},
-        {"Expires", "-1"},
-        {"X-pciBooking-Tokenization-Warnings",
-         "[1004] The card number does not match the card type;;"},
-        {"X-VERTICALBOOKINGFETCHCC",
-         "https://service.pcibooking.net/api/payments/paycard/token_1;https://service.pcibooking.net/api/payments/paycard/token_2"},
-        {"Date", "Wed, 23 Oct 2019 11:21:37 GMT"},
-        {"X-XSS-Protection", "1; mode=block"},
-        {"X-Content-Type-Options", "nosniff"}
+        ["Cache-Control", "no-cache"],
+        ["Pragma", "no-cache"],
+        ["Content-Length", "7956"],
+        ["Content-Type", "application/xml; charset=UTF-8"],
+        ["Expires", "-1"],
+        ["X-pciBooking-Tokenization-Warnings",
+         "[1004] The card number does not match the card type;;"],
+        ["X-VERTICALBOOKINGFETCHCC",
+         "https://service.pcibooking.net/api/payments/paycard/token_1;https://service.pcibooking.net/api/payments/paycard/token_2"],
+        ["Date", "Wed, 23 Oct 2019 11:21:37 GMT"],
+        ["X-XSS-Protection", "1; mode=block"],
+        ["X-Content-Type-Options", "nosniff"]
       ],
+      method: "POST",
       pci: %{
         errors: [],
         tokens: [
