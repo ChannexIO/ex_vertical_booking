@@ -21,13 +21,6 @@ defmodule ExVerticalBooking.Request.PCIProxies.PCIBooking do
     Request.send(payload, credentials)
   end
 
-  @spec get_token_meta(String.t(), String.t()) :: any()
-  def get_token_meta(token, api_key) do
-    token
-    |> get_token_meta_url()
-    |> HTTPoison.get(headers(api_key), timeout: 60_000, recv_timeout: 120_000)
-  end
-
   defp start_temporary_session(api_key) do
     with {:ok, body, _} <-
            send_request("/payments/paycard/tempsession", {"", %{success: true}}, api_key) do
@@ -130,12 +123,6 @@ defmodule ExVerticalBooking.Request.PCIProxies.PCIBooking do
     map
   end
 
-  defp get_token_meta_url(token) do
-    get_url("https://service.pcibooking.net/api/payments/paycard/meta",
-      ref: token |> String.split("/") |> List.last()
-    )
-  end
-
   defp get_url(url, arguments) do
     arguments =
       arguments
@@ -153,12 +140,12 @@ defmodule ExVerticalBooking.Request.PCIProxies.PCIBooking do
   defp headers(api_key) do
     [
       {"Authorization", "APIKEY #{api_key}"},
-      {"Chache-Control", "no-cache"}
+      {"Cache-Control", "no-cache"}
     ]
   end
 
   defp get_from(headers, key) do
-    with [{_, item} | _] <- Enum.filter(headers, fn {a, _} -> a == key end) do
+    with [[_, item] | _] <- Enum.filter(headers, fn [a, _] -> a == key end) do
       item
     else
       _ -> nil

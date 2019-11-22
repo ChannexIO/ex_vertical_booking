@@ -53,35 +53,35 @@ defmodule ExVerticalBooking.Error do
     do: "Invalid builded structure of API request: #{inspect(reason)}"
 
   def humanize_error({:function_clause, reason}),
-    do: "Function clause error: #{inspect(reason)}}"
+    do: "Function clause error: #{inspect(reason)}"
 
   def humanize_error({:argument_error, reason}),
-    do: "Argument error: #{inspect(reason)}}"
+    do: "Argument error: #{inspect(reason)}"
 
   def humanize_error({:catch_error, reason}),
-    do: "Catch error: #{inspect(reason)}}"
+    do: "Catch error: #{inspect(reason)}"
 
   def humanize_error({:date_in_the_past_or_not_alowed, reason}),
-    do: "Invalid date: updates in the past are not allowed: #{inspect(reason)}}"
+    do: "Invalid date: updates in the past are not allowed: #{inspect(reason)}"
 
   def humanize_error({:required_field_missing, reason}),
-    do: "Required field missing error: #{inspect(reason)}}"
+    do: "Required field missing error: #{inspect(reason)}"
 
   def humanize_error({:invalid_room_type, reason}),
-    do: "Invalid room type error: #{inspect(reason)}}"
+    do: "Invalid room type error: #{inspect(reason)}"
 
   def humanize_error({:invalid_date_range, reason}),
-    do: "Invalid date range error: #{inspect(reason)}}"
+    do: "Invalid date range error: #{inspect(reason)}"
 
   def humanize_error({:invalid_credentials, reason}),
-    do: "Invalid credentials error: #{inspect(reason)}}"
+    do: "Invalid credentials error: #{inspect(reason)}"
 
   def humanize_error({:too_many_nights, reason}),
-    do: "Too many nights: Maximum update limit reached (date range max = 31): #{inspect(reason)}}"
+    do: "Too many nights: Maximum update limit reached (date range max = 31): #{inspect(reason)}"
 
   def humanize_error({:undefined_error, reason}),
-    do: "Undefined error: #{inspect(reason)}}"
+    do: "Undefined error: #{inspect(reason)}"
 
   def humanize_error(reason),
-    do: "Undefined error: #{inspect(reason)}}"
+    do: "Undefined error: #{inspect(reason)}"
 end
