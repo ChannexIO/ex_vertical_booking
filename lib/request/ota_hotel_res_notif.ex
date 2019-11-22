@@ -35,7 +35,7 @@ defmodule ExVerticalBooking.Request.OtaHotelResNotif do
   @spec execute(t, credentials, Meta.t()) :: {:ok, struct(), Meta.t()} | {:error, any(), Meta.t()}
   def execute(%{hotel_reservations: _} = params, credentials, meta) do
     params
-    |> build_hotel_res_notif(meta)
+    |> build_hotel_res_notif(Map.put(meta, :method, @action))
     |> Document.build(@action, credentials)
     |> Request.send(credentials)
   end

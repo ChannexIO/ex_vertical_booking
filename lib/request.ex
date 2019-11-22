@@ -14,7 +14,6 @@ defmodule ExVerticalBooking.Request do
     with {:ok, parsed_response} <- Parser.handle_response(response) do
       {:ok, parsed_response,
        Map.merge(meta, %{
-         method: "POST",
          response: payload.body,
          headers: Enum.map(payload.headers, &Tuple.to_list/1),
          finished_at: DateTime.utc_now(),
@@ -24,7 +23,6 @@ defmodule ExVerticalBooking.Request do
       {:error, reason} ->
         {:error, response,
          Map.merge(meta, %{
-           method: "POST",
            success: false,
            errors: [reason],
            finished_at: DateTime.utc_now(),
