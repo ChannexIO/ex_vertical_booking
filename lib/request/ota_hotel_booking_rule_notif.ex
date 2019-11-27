@@ -42,7 +42,7 @@ defmodule ExVerticalBooking.Request.OtaHotelBookingRuleNotif do
   @spec execute(t, credentials, Meta.t()) :: {:ok, struct(), Meta.t()} | {:error, any(), Meta.t()}
   def execute(%{hotel_code: _, rule_messages: _} = params, credentials, meta) do
     params
-    |> build_hotel_booking_rule_notif(meta)
+    |> build_hotel_booking_rule_notif(Map.put(meta, :method, @action))
     |> Document.build(@action, credentials, [{"Target", "Production"}])
     |> Request.send(credentials)
   end

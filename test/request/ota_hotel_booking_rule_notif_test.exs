@@ -10,7 +10,7 @@ defmodule ExVerticalBooking.Request.OtaHotelBookingRuleNotifTest do
   @meta %{
     request: nil,
     response: nil,
-    method: nil,
+    method: "OTA_action",
     started_at: DateTime.utc_now(),
     finished_at: nil,
     success: true,

@@ -12,7 +12,7 @@ defmodule ExVerticalBooking.Request.OtaRead do
   @spec execute(%{hotel_code: String.t()}, credentials, Meta.t()) :: {:ok, struct(), Meta.t()} | {:error, any(), Meta.t()}
   def execute(%{hotel_code: _} = params, credentials, meta) do
     params
-    |> build_read(meta)
+    |> build_read(Map.put(meta, :method, @action))
     |> Document.build(@action, credentials)
     |> PCIBooking.proxy_send(credentials)
   end

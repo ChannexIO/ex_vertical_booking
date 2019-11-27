@@ -98,4 +98,17 @@ defmodule ExVerticalBooking.Request.PCIProxies.PCIBookingTest do
                warnings: ["", ""]
              })
   end
+
+  test "success rename_keys" do
+    assert [
+             %{token: "token_1", warning: "warning_1"},
+             %{token: "token_2"},
+             %{error: "error_3"}
+           ] =
+             PCIBooking.rename_keys([
+               %{tokens: "token_1", warnings: "warning_1"},
+               %{tokens: "token_2"},
+               %{errors: "error_3"}
+             ])
+  end
 end
