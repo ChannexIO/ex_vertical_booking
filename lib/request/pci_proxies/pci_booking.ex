@@ -10,7 +10,7 @@ defmodule ExVerticalBooking.Request.PCIProxies.PCIBooking do
       pci =
         with {:ok, meta} <- parse_headers(meta),
              {:ok, pci} <- convert_token_headers(meta) do
-          pci
+          rename_keys(pci)
         end
 
       {:ok, response, Map.put(meta, :pci, pci)}
@@ -90,6 +90,26 @@ defmodule ExVerticalBooking.Request.PCIProxies.PCIBooking do
       inject_same_length_list(map, :warnings, warnings)
     else
       {_, _, _} -> {:error, :non_consistent_errors_list}
+    end
+  end
+
+  def rename_keys([]), do: []
+
+  def rename_keys(pci) do
+    Enum.map(pci, fn el ->
+      %{}
+      |> add_key_if_old_key_exists(el, :tokens, :token)
+      |> add_key_if_old_key_exists(el, :warnings, :warning)
+      |> add_key_if_old_key_exists(el, :errors, :error)
+    end)
+  end
+
+  defp add_key_if_old_key_exists( acc, pci, old_key, new_key) do
+    pci
+    |> Map.get(old_key)
+    |> case do
+      nil -> acc
+      token -> Map.put(acc, new_key, token)
     end
   end
 
