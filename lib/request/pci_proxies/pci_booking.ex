@@ -1,9 +1,12 @@
 defmodule ExVerticalBooking.Request.PCIProxies.PCIBooking do
+  require Logger
   alias ExVerticalBooking.Request
   @api_endpoint "https://service.pcibooking.net/api"
 
   @spec proxy_send({String.t(), map()}, map()) :: {:ok, map(), map()} | {:error, map(), map()}
   def proxy_send({document, %{success: true} = meta}, %{endpoint: endpoint, api_key: api_key}) do
+    Logger.log(:info, "VerticalBooking PCIBooking.proxy_send")
+
     with {:ok, temp_session} <- start_temporary_session(api_key),
          url <- get_tokenized_booking_url(endpoint, temp_session),
          {:ok, response, meta} <- send_request(url, {document, meta}, api_key) do
@@ -18,10 +21,13 @@ defmodule ExVerticalBooking.Request.PCIProxies.PCIBooking do
   end
 
   def proxy_send(payload, credentials) do
+    Logger.log(:info, "VerticalBooking PCIBooking.proxy_send.fallback")
     Request.send(payload, credentials)
   end
 
   defp start_temporary_session(api_key) do
+    Logger.log(:info, "VerticalBooking PCIBooking.start_temporary_session")
+
     with {:ok, body, _} <-
            send_request("/payments/paycard/tempsession", {"", %{success: true}}, api_key) do
       {:ok, String.replace(body.body, "\"", "")}
@@ -31,6 +37,8 @@ defmodule ExVerticalBooking.Request.PCIProxies.PCIBooking do
   end
 
   defp get_tokenized_booking_url(endpoint, temp_session) do
+    Logger.log(:info, "VerticalBooking PCIBooking.get_tokenized_booking_url")
+
     get_url("/payments/paycard/capture",
       sessionToken: temp_session,
       httpMethod: "POST",
@@ -41,6 +49,7 @@ defmodule ExVerticalBooking.Request.PCIProxies.PCIBooking do
   end
 
   defp send_request(url, body, api_key) do
+    Logger.log(:info, "VerticalBooking PCIBooking.send_request")
     Request.send(body, %{endpoint: "#{@api_endpoint}#{url}"}, headers(api_key))
   end
 
@@ -104,7 +113,7 @@ defmodule ExVerticalBooking.Request.PCIProxies.PCIBooking do
     end)
   end
 
-  defp add_key_if_old_key_exists( acc, pci, old_key, new_key) do
+  defp add_key_if_old_key_exists(acc, pci, old_key, new_key) do
     pci
     |> Map.get(old_key)
     |> case do
