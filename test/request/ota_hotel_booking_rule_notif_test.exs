@@ -91,17 +91,17 @@ defmodule ExVerticalBooking.Request.OtaHotelBookingRuleNotifTest do
                        ]},
                       {:"ns1:BookingRule", nil,
                        [
-                         {:"ns1:RestrictionStatus", %{Rerstriction: "Master", Status: "Close"},
+                         {:"ns1:RestrictionStatus", %{Restriction: "Master", Status: "Close"},
                           nil}
                        ]},
                       {:"ns1:BookingRule", nil,
                        [
-                         {:"ns1:RestrictionStatus", %{Rerstriction: "Arrival", Status: "Open"},
+                         {:"ns1:RestrictionStatus", %{Restriction: "Arrival", Status: "Open"},
                           nil}
                        ]},
                       {:"ns1:BookingRule", nil,
                        [
-                         {:"ns1:RestrictionStatus", %{Rerstriction: "Departure", Status: "Close"},
+                         {:"ns1:RestrictionStatus", %{Restriction: "Departure", Status: "Close"},
                           nil}
                        ]}
                     ]}
