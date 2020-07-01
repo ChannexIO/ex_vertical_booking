@@ -34,7 +34,7 @@ defmodule ExVerticalBooking.MixProject do
     [
       {:sweet_xml, "~> 0.6.5"},
       {:xml_builder, "~> 2.1"},
-      {:httpoison, "~> 1.6"},
+      {:http_client, github: "ChannexIO/http_client"},
       {:elixir_uuid, "~> 1.2"},
       {:exsom, "~> 0.1.0"},
       {:detergentex, "0.0.5"},
