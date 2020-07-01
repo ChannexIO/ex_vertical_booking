@@ -5,11 +5,15 @@ defmodule ExVerticalBooking.Response.FaultProcessor do
     e = convert(e)
 
     {:error, e,
-      meta |> Map.put(:success, false) |> Map.put(:errors, [Error.message(e) | meta.errors])}
+     meta |> Map.put(:success, false) |> Map.put(:errors, [Error.message(e) | meta.errors])}
   end
 
-  def convert(%{faultcode: code, faultstring: string}), do: Error.exception({:http_error, {code, string}})
-  def convert(%{"faultcode" => code, "faultstring" => string}), do: Error.exception({:http_error, {code, string}})
+  def convert(%{faultcode: code, faultstring: string}),
+    do: Error.exception({:http_error, {code, string}})
+
+  def convert(%{"faultcode" => code, "faultstring" => string}),
+    do: Error.exception({:http_error, {code, string}})
+
   def convert({:fatal, reason}), do: Error.exception({:fatal, reason})
   def convert({:exit, reason}), do: Error.exception({:exit, reason})
   def convert({:badrpc, {_, reason}}), do: Error.exception(reason)
