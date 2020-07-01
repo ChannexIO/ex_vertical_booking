@@ -1,7 +1,7 @@
 defmodule ExVerticalBooking.Request.OtaRead do
   require Logger
   alias ExVerticalBooking.Meta
-  alias ExVerticalBooking.Request.PCIProxies.PCIBooking
+  alias ExVerticalBooking.Request.PCIProxies.ChannexPCI
   alias ExVerticalBooking.Request.{Document}
   @action "OTA_Read"
 
@@ -18,7 +18,7 @@ defmodule ExVerticalBooking.Request.OtaRead do
     params
     |> build_read(Map.put(meta, :method, @action))
     |> Document.build(@action, credentials)
-    |> PCIBooking.proxy_send(credentials)
+    |> ChannexPCI.proxy_send(credentials)
   end
 
   @spec build_read(%{hotel_code: String.t()}, Meta.t()) ::
