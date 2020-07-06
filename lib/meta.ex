@@ -6,10 +6,10 @@ defmodule ExVerticalBooking.Meta do
             finished_at: nil
 
   @type t :: %__MODULE__{
-               request: String.t(),
-               response: String.t(),
-               method: String.t(),
-               started_at: DateTime.t(),
-               finished_at: DateTime.t()
-             }
+          request: String.t(),
+          response: String.t(),
+          method: String.t(),
+          started_at: DateTime.t(),
+          finished_at: DateTime.t()
+        }
 end

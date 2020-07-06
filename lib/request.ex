@@ -1,5 +1,7 @@
 defmodule ExVerticalBooking.Request do
   @moduledoc "Get HTTP request after validation payload"
+
+  use HTTPClient
   alias ExVerticalBooking.Response.Parser
 
   @spec send({String.t(), map()}, map(), keyword()) ::
@@ -8,10 +10,9 @@ defmodule ExVerticalBooking.Request do
 
   def send({document, %{success: true} = meta}, %{endpoint: endpoint}, headers) do
     {_, payload} =
-      response =
-      HTTPoison.post(endpoint, document, headers, timeout: 60_000, recv_timeout: 120_000)
+      response = post(endpoint, document, headers, timeout: 60_000, recv_timeout: 120_000)
 
-    with {:ok, parsed_response} <- Parser.handle_response(response) do
+    with {:ok, parsed_response} <- Parser.handle_response(response, endpoint) do
       {:ok, parsed_response,
        Map.merge(meta, %{
          response: payload.body,
