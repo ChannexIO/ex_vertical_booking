@@ -9,8 +9,8 @@ defmodule ExVerticalBooking.Request.PCIProxies.ChannexPCI do
     with url <- get_url(endpoint, api_key),
          {:ok, response, meta} <- Request.send({document, meta}, %{endpoint: url}, []) do
       enriched_meta =
-        with {:ok, meta} <- parse_headers(meta),
-             {:ok, pci} <- convert_token_headers(meta) do
+        with {:ok, headers} <- parse_headers(meta),
+             {:ok, pci} <- convert_token_headers(headers) do
           Map.put(meta, :pci, pci)
         else
           {:error, error} ->
@@ -54,10 +54,6 @@ defmodule ExVerticalBooking.Request.PCIProxies.ChannexPCI do
   end
 
   defp combine_headers(result, [], [], []), do: {:ok, result}
-
-  defp combine_headers(_result, ["" | _tokens], ["" | _errors], _warnings) do
-    {:error, "Headers contains non consistent errors list"}
-  end
 
   defp combine_headers(result, [token | tokens], [error | errors], [warning | warnings]) do
     result

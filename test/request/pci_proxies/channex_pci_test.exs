@@ -30,15 +30,6 @@ defmodule ExVerticalBooking.Request.PCIProxies.ChannexPCITest do
              ChannexPCI.convert_token_headers(%{tokens: [], errors: nil, warnings: nil})
   end
 
-  test "fail convert_token_headers when empty token without any errors" do
-    assert {:error, "Headers contains non consistent errors list"} ==
-             ChannexPCI.convert_token_headers(%{
-               tokens: ["token_1", "token_2", ""],
-               errors: nil,
-               warnings: nil
-             })
-  end
-
   test "success convert_token_headers when all valid, but warning" do
     assert {:ok, [%{token: "token_1", warning: "warning_1"}, %{token: "token_2"}]} ==
              ChannexPCI.convert_token_headers(%{
