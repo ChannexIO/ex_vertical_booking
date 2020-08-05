@@ -4,9 +4,8 @@ defmodule ExVerticalBooking.Request do
   use HTTPClient
   alias ExVerticalBooking.Response.Parser
 
-  @spec send({String.t(), map()}, map(), keyword()) ::
-          {:ok, map(), map()} | {:error, map(), map()}
-  def send(params, credentials, headers \\ [])
+  @spec send({String.t(), map()}, map(), keyword()) :: {:ok, map(), map()} | {:error, map(), map()}
+  def send(params, credentials, headers \\ [{"Content-Type", "application/xml"}])
 
   def send({document, %{success: true} = meta}, %{endpoint: endpoint}, headers) do
     {_, payload} =
