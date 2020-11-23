@@ -11,7 +11,7 @@ defmodule ExVerticalBooking.Request do
     {_, payload} =
       response = post(endpoint, document, headers, timeout: 60_000, recv_timeout: 120_000)
 
-    with {:ok, parsed_response} <- Parser.handle_response(response, endpoint) do
+    with {:ok, parsed_response} <- Parser.handle_response(response) do
       {:ok, parsed_response,
        Map.merge(meta, %{
          response: payload.body,
