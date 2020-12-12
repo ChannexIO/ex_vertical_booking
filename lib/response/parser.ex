@@ -160,7 +160,7 @@ defmodule ExVerticalBooking.Response.Parser do
     {:ok, %Response{body: body, headers: headers, request_url: request_url, status_code: status}}
   end
 
-  def handle_response({:error, %HTTPClient.Error{reason: reason}}, _) do
+  def handle_response({:error, %HTTPClient.Error{reason: reason}}) do
     {:error, reason}
   end
 end
