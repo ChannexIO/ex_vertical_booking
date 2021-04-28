@@ -10,7 +10,7 @@ by adding `ex_vertical_booking` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:ex_vertical_booking, "~> 0.1.0"}
+    {:ex_vertical_booking, "~> 0.2.13"}
   ]
 end
 ```
