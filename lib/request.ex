@@ -1,6 +1,6 @@
 defmodule ExVerticalBooking.Request do
   @moduledoc "Get HTTP request after validation payload"
-
+  require Logger
   use HTTPClient
   alias ExVerticalBooking.Response.Parser
 
