@@ -1,7 +1,7 @@
 defmodule ExVerticalBooking.MixProject do
   use Mix.Project
 
-  @version "0.2.13"
+  @version "0.2.14"
 
   def project do
     [
@@ -34,7 +34,7 @@ defmodule ExVerticalBooking.MixProject do
     [
       {:sweet_xml, "~> 0.6.5"},
       {:xml_builder, "~> 2.1"},
-      {:http_client, github: "ChannexIO/http_client", tag: "v0.3.0"},
+      {:http_client, github: "ChannexIO/http_client", tag: "v0.3.1"},
       {:elixir_uuid, "~> 1.2"},
       {:exsom, "~> 0.1.0"},
       {:detergentex, "0.0.5"},
