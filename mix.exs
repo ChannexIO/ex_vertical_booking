@@ -1,7 +1,7 @@
 defmodule ExVerticalBooking.MixProject do
   use Mix.Project
 
-  @version "0.2.19"
+  @version "0.2.20"
 
   def project do
     [
@@ -11,7 +11,7 @@ defmodule ExVerticalBooking.MixProject do
       config_path: "./config/config.exs",
       deps_path: "./deps",
       lockfile: "./mix.lock",
-      elixir: "~> 1.9",
+      elixir: "~> 1.12.3",
       start_permanent: Mix.env() == :prod,
       name: "ExVerticalBooking",
       source_url: "https://github.com/ChannexIO/ex_vertical_booking",
@@ -33,12 +33,13 @@ defmodule ExVerticalBooking.MixProject do
   defp deps do
     [
       {:sweet_xml, "~> 0.7.2"},
-      {:xml_builder, "~> 2.1"},
-      {:http_client, github: "ChannexIO/http_client", tag: "v0.3.4"},
-      {:elixir_uuid, "~> 1.2"},
-      {:exsom, "~> 0.1.0"},
-      {:detergentex, "0.0.5"},
-      {:ex_doc, "~> 0.21", only: :dev}
+      {:xml_builder, "~> 2.2"},
+      {:http_client, github: "ChannexIO/http_client", branch: "refactoring/update_dependencies"},
+      {:elixir_uuid, "~> 1.2.1"},
+      {:erlsom, "~> 1.5"},
+      {:exsom, "~> 0.2.1"},
+      {:detergentex, "0.0.7"},
+      {:ex_doc, "~> 0.27.3", only: :dev}
     ]
   end
 
